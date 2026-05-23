@@ -11,7 +11,11 @@ import { trackEvent } from "../utils/analytics.js";
 import { logger } from "../utils/logger.js";
 
 const httpsAgent = new https.Agent({ rejectUnauthorized: false });
-const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY, httpAgent: httpsAgent });
+let _client = null;
+function getClient() {
+  if (!_client) _client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY, httpAgent: httpsAgent });
+  return _client;
+}
 const MODEL = "gpt-4o";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -121,7 +125,7 @@ export async function runAgent(sessionId, userText, channel = "web") {
 
   const memCtx = buildMemoryContext(sessionId); // session-based fallback
 
-  const response = await client.chat.completions.create({
+  const response = await getClient().chat.completions.create({
     model: MODEL,
     messages: [{ role: "system", content: buildSystemPrompt(channel, context, memCtx) }, ...messages],
     tools,
@@ -140,7 +144,7 @@ export async function runAgent(sessionId, userText, channel = "web") {
       { role: "tool", tool_call_id: tc.id, content: result },
     ];
 
-    const followUp = await client.chat.completions.create({
+    const followUp = await getClient().chat.completions.create({
       model: MODEL,
       messages: [{ role: "system", content: buildSystemPrompt(channel, context, memCtx) }, ...withTool],
       temperature: 0.4,
@@ -171,7 +175,7 @@ export async function runAgentStream(sessionId, userText, channel, onChunk) {
   let fullReply = "", emailSent = false, orderRef = null;
   let toolCall = null, toolArgs = "", finishReason = null;
 
-  const stream = await client.chat.completions.create({
+  const stream = await getClient().chat.completions.create({
     model: MODEL,
     messages: [{ role: "system", content: buildSystemPrompt(channel, context, memCtx) }, ...messages],
     tools, tool_choice: "auto", temperature: 0.4, stream: true,
@@ -201,7 +205,7 @@ export async function runAgentStream(sessionId, userText, channel, onChunk) {
     };
     const withTool = [...messages, toolMessage, { role: "tool", tool_call_id: toolCall.id, content: res.result }];
 
-    const followUp = await client.chat.completions.create({
+    const followUp = await getClient().chat.completions.create({
       model: MODEL,
       messages: [{ role: "system", content: buildSystemPrompt(channel, context, memCtx) }, ...withTool],
       temperature: 0.4, stream: true,
