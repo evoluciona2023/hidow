@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Shop HiDow International | TENS and EMS Units</title>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:#fff;color:#1a1a2e}
+
+    /* ── Header ── */
+    .header{background:#1a1a2e;padding:0 32px;height:64px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+    .logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+    .logo img{height:36px;filter:brightness(0) invert(1)}
+    .logo-text{color:white;font-size:18px;font-weight:700;letter-spacing:.5px}
+    .nav-links{display:flex;gap:24px}
+    .nav-links a{color:rgba(255,255,255,.8);text-decoration:none;font-size:14px;transition:color .15s}
+    .nav-links a:hover{color:white}
+    .header-cta{background:#2563eb;color:white;border:none;border-radius:6px;padding:8px 18px;font-size:13px;cursor:pointer;font-weight:600}
+
+    /* ── Hero banner ── */
+    .hero{background:linear-gradient(135deg,#1a1a2e 0%,#16213e 60%,#0f3460 100%);color:white;padding:72px 32px;text-align:center}
+    .hero h1{font-size:42px;font-weight:800;margin-bottom:12px;letter-spacing:-1px}
+    .hero p{font-size:18px;opacity:.8;max-width:560px;margin:0 auto 28px;line-height:1.6}
+    .hero-badges{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+    .hero-badge{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:6px 16px;font-size:13px}
+
+    /* ── Filter bar ── */
+    .filter-bar{background:#f8f9fa;border-bottom:1px solid #eee;padding:16px 32px;display:flex;gap:10px;overflow-x:auto;position:sticky;top:64px;z-index:99}
+    .filter-btn{background:white;border:1.5px solid #ddd;border-radius:20px;padding:7px 18px;font-size:13px;cursor:pointer;white-space:nowrap;transition:all .15s;font-weight:500}
+    .filter-btn:hover{border-color:#2563eb;color:#2563eb}
+    .filter-btn.active{background:#1a1a2e;border-color:#1a1a2e;color:white}
+
+    /* ── Products grid ── */
+    .shop-container{max-width:1200px;margin:0 auto;padding:40px 24px}
+    .section-title{font-size:22px;font-weight:700;margin-bottom:4px;color:#1a1a2e}
+    .section-count{font-size:13px;color:#888;margin-bottom:24px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:24px}
+    .card{border:1px solid #eee;border-radius:12px;overflow:hidden;transition:box-shadow .2s,transform .2s;background:white;cursor:pointer;text-decoration:none;display:block;color:inherit}
+    .card:hover{box-shadow:0 8px 32px rgba(0,0,0,.12);transform:translateY(-3px)}
+    .card-img{position:relative;background:#f8f9fa;height:200px;overflow:hidden}
+    .card-img img{width:100%;height:100%;object-fit:contain;padding:16px;transition:transform .3s}
+    .card:hover .card-img img{transform:scale(1.05)}
+    .badge{position:absolute;top:10px;left:10px;background:#ef4444;color:white;font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:.5px}
+    .badge.best-seller{background:#f59e0b}
+    .badge.new{background:#10b981}
+    .card-body{padding:14px 16px 18px}
+    .card-category{font-size:11px;color:#888;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;font-weight:600}
+    .card-name{font-size:15px;font-weight:700;margin-bottom:6px;color:#1a1a2e;line-height:1.3}
+    .card-desc{font-size:12px;color:#666;line-height:1.5;margin-bottom:12px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+    .card-footer{display:flex;align-items:center;justify-content:space-between;gap:8px}
+    .card-price{font-size:18px;font-weight:800;color:#1a1a2e}
+    .btn-add{background:#2563eb;color:white;border:none;border-radius:7px;padding:8px 16px;font-size:12px;cursor:pointer;font-weight:600;transition:background .15s;white-space:nowrap}
+    .btn-add:hover{background:#1d4ed8}
+
+    /* ── Category headings ── */
+    .category-section{margin-bottom:48px}
+    .cat-header{display:flex;align-items:center;gap:14px;margin-bottom:20px;padding-bottom:12px;border-bottom:2px solid #f0f2f5}
+    .cat-icon{font-size:24px}
+    .cat-title{font-size:20px;font-weight:700}
+    .cat-count{font-size:13px;color:#888;margin-left:auto}
+
+    /* ── Promo banner ── */
+    .promo-banner{background:linear-gradient(90deg,#1a1a2e,#2563eb);color:white;border-radius:12px;padding:28px 32px;margin-bottom:40px;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap}
+    .promo-text h3{font-size:20px;font-weight:700;margin-bottom:4px}
+    .promo-text p{opacity:.8;font-size:14px}
+    .promo-code{background:rgba(255,255,255,.15);border:1.5px dashed rgba(255,255,255,.5);border-radius:8px;padding:10px 20px;font-size:20px;font-weight:800;letter-spacing:3px}
+    .promo-action{display:flex;flex-direction:column;align-items:center;gap:6px}
+    .promo-action small{opacity:.7;font-size:12px}
+
+    /* ── Footer ── */
+    .footer{background:#1a1a2e;color:rgba(255,255,255,.6);text-align:center;padding:32px;font-size:13px;margin-top:80px}
+    .footer a{color:rgba(255,255,255,.8);text-decoration:none}
+
+    /* ── Chat prompt bubble ── */
+    .chat-prompt{position:fixed;bottom:92px;right:90px;background:white;border-radius:12px;padding:12px 16px;box-shadow:0 4px 20px rgba(0,0,0,.15);font-size:13px;max-width:220px;z-index:9997;animation:fadeIn .4s ease}
+    .chat-prompt::after{content:'';position:absolute;bottom:-8px;right:14px;width:0;height:0;border-left:8px solid transparent;border-right:8px solid transparent;border-top:8px solid white}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+    .chat-prompt strong{display:block;color:#1a1a2e;margin-bottom:2px}
+    .chat-prompt span{color:#666}
+
+    @media(max-width:640px){
+      .hero h1{font-size:28px}
+      .header{padding:0 16px}
+      .nav-links{display:none}
+      .filter-bar{padding:12px 16px}
+      .shop-container{padding:24px 16px}
+      .promo-banner{flex-direction:column;text-align:center}
+      .chat-prompt{display:none}
+    }
+  </style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="header">
+  <a href="#" class="logo">
+    <span class="logo-text">HiDow</span>
+  </a>
+  <nav class="nav-links">
+    <a href="#">Home</a>
+    <a href="#">Shop</a>
+    <a href="#">Technology</a>
+    <a href="#">About</a>
+    <a href="#">Contact</a>
+  </nav>
+  <button class="header-cta" onclick="document.querySelector('button[aria-label]').click()">Chat with Expert</button>
+</header>
+
+<!-- Hero -->
+<section class="hero">
+  <h1>Shop HiDow International</h1>
+  <p>FDA-cleared TENS & EMS devices for pain relief and muscle recovery. Ask our AI expert for personalized recommendations.</p>
+  <div class="hero-badges">
+    <span class="hero-badge">🏥 FDA Cleared</span>
+    <span class="hero-badge">🚚 Free Shipping $99+</span>
+    <span class="hero-badge">💬 AI Expert Available 24/7</span>
+    <span class="hero-badge">🇺🇸 Made for USA</span>
+  </div>
+</section>
+
+<!-- Filter bar -->
+<div class="filter-bar" id="filterBar">
+  <button class="filter-btn active" data-cat="all">All Products</button>
+  <button class="filter-btn" data-cat="wireless">Wireless TENS/EMS</button>
+  <button class="filter-btn" data-cat="wired">Wired TENS/EMS</button>
+  <button class="filter-btn" data-cat="percussion">Percussion & Compression</button>
+  <button class="filter-btn" data-cat="vibration">Vibration Therapy</button>
+  <button class="filter-btn" data-cat="wraps">Electrotherapy Wraps</button>
+  <button class="filter-btn" data-cat="heat">Heat & Light</button>
+  <button class="filter-btn" data-cat="pads">Electrode Pads</button>
+  <button class="filter-btn" data-cat="accessories">Accessories</button>
+  <button class="filter-btn" data-cat="organization">Bags</button>
+</div>
+
+<!-- Shop -->
+<div class="shop-container">
+
+  <!-- Promo banner -->
+  <div class="promo-banner">
+    <div class="promo-text">
+      <h3>Exclusive discount for chat customers</h3>
+      <p>Ask our AI assistant and use this code at checkout to save on your order</p>
+    </div>
+    <div class="promo-code">HIDOW10</div>
+    <div class="promo-action">
+      <button class="header-cta" onclick="document.querySelector('button[aria-label]').click()" style="font-size:14px;padding:10px 22px">Ask the Expert →</button>
+      <small>10% off your entire order</small>
+    </div>
+  </div>
+
+  <div id="shopContent"></div>
+</div>
+
+<!-- Footer -->
+<footer class="footer">
+  <p>© 2025 HiDow International · Maryland Heights, MO · <a href="tel:3145692888">(314) 569-2888</a> · <a href="https://www.hidow.com">hidow.com</a></p>
+  <p style="margin-top:8px">Our devices are FDA-cleared for OTC use and are not intended to replace professional healthcare.</p>
+</footer>
+
+<!-- Chat prompt bubble -->
+<div class="chat-prompt" id="chatPrompt">
+  <strong>👋 Need help choosing?</strong>
+  <span>Our AI expert can recommend the perfect device for your pain area.</span>
+</div>
+
+<!-- HiDow Chat Widget -->
+<script src="/hidow-widget.iife.js" defer></script>
+
+<script>
+const PRODUCTS = [
+  {id:"hidow-spot",name:"HiDow Spot",category:"wireless",categoryLabel:"Wireless TENS/EMS Devices",price:119,priceDisplay:"$119",url:"https://www.hidow.com/shop/hidow-spot/",description:"Relief made easy with the HiDow SPOT, our first-gen wireless TENS/EMS device. With 4 modes, 20 intensity levels, and a compact design, it's built for relaxation, recovery, and relief anytime, anywhere.",image:"https://www.hidow.com/wp-content/uploads/2020/01/spot-box-simul.jpg",badge:null},
+  {id:"wireless-4-9",name:"Wireless 4-9",category:"wireless",categoryLabel:"Wireless TENS/EMS Devices",price:599,priceDisplay:"$599",url:"https://www.hidow.com/shop/wireless-4-9/",description:"In the Goldilocks Zone: Not as basic as the SPOT, and not as advanced as the Pro Touch—meet the Wireless 4-9, our second-gen wireless TENS/EMS device built for multi-area relief with 9 modes, 20 intensity levels, and independent controls.",image:"https://www.hidow.com/wp-content/uploads/2016/07/Hidow-Wireless-4-9-Remote-and-Receivers-1.jpg",badge:null},
+  {id:"pro-touch-6-12",name:"Pro Touch 6-12",category:"wireless",categoryLabel:"Wireless TENS/EMS Devices",price:999,priceDisplay:"$999",url:"https://www.hidow.com/shop/pro-touch/",description:"The most advanced TENS/EMS device in the HiDow lineup. With a sleek touchscreen, support for up to 6 wireless receivers, 12 therapeutic modes, and 20 intensity levels.",image:"https://www.hidow.com/wp-content/uploads/2018/08/ProTouch6-12-1.jpg",badge:"best-seller"},
+  {id:"wireless-receiver",name:"Universal Wireless Receiver",category:"wireless",categoryLabel:"Wireless TENS/EMS Devices",price:99,priceDisplay:"$99",url:"https://www.hidow.com/shop/wireless-receiver/",description:"Supercharge your Pro Touch 6-12 or Wireless 4-9 with the Universal Wireless Receiver. Add extra channels for more targeted pain relief.",image:"https://www.hidow.com/wp-content/uploads/2024/09/HiDow-Universal-Receiver-Box.jpg",badge:null},
+  {id:"xp-micro",name:"XP Micro",category:"wired",categoryLabel:"Wired TENS/EMS Devices",price:299,priceDisplay:"$299",url:"https://www.hidow.com/shop/acu-xp-micro/",description:"Small, but mighty. The XP Micro packs big relief with dual output channels, 8 modes, and total control—all in a sleek, compact design that fits in your pocket.",image:"https://www.hidow.com/wp-content/uploads/2015/06/XP-Micro-Device.jpg",badge:null},
+  {id:"xpd-12",name:"XPD 12",category:"wired",categoryLabel:"Wired TENS/EMS Devices",price:399,priceDisplay:"$399",url:"https://www.hidow.com/shop/xpd-12/",description:"The most loved in our wired lineup. XPD 12 delivers serious relief with 12 modes, 20 intensity levels, and dual ports—each with independent intensity control.",image:"https://www.hidow.com/wp-content/uploads/2014/06/xpd12-blk-w-pads.jpg",badge:null},
+  {id:"xpds-18",name:"XPDS 18",category:"wired",categoryLabel:"Wired TENS/EMS Devices",price:499,priceDisplay:"$499",url:"https://www.hidow.com/shop/xpds-18/",description:"Smart, simple, and seriously effective. 18 therapeutic modes, dual ports for multi-zone relief, and 20 intensity levels. 10+ hour battery life.",image:"https://www.hidow.com/wp-content/uploads/2018/04/Hidow-XPDS-18-Device-and-Pads-1.jpg",badge:null},
+  {id:"xpds-4-24",name:"XPDS 4-24",category:"wired",categoryLabel:"Wired TENS/EMS Devices",price:649,priceDisplay:"$649",url:"https://www.hidow.com/shop/xpds-4-24/",description:"24 modes, quad-port flexibility, one powerful device. Complete control for personalized recovery in a sleek, durable design.",image:"https://www.hidow.com/wp-content/uploads/2019/03/XPDS424-Device-2.jpg",badge:null},
+  {id:"hd-mini2",name:"HD Mini2 Massage Gun",category:"percussion",categoryLabel:"Percussion & Compression",price:299,priceDisplay:"$299",url:"https://www.hidow.com/shop/hd-mini2/",description:"Compact power with a polished edge. The HD Mini2 delivers deep, steady percussion through a sleek aluminum frame.",image:"https://www.hidow.com/wp-content/uploads/2022/12/Mini2-6.jpg",badge:null},
+  {id:"m3-mini3",name:"M3 Mini3 Massage Gun",category:"percussion",categoryLabel:"Percussion & Compression",price:229,priceDisplay:"$229",url:"https://www.hidow.com/shop/m3-mini-gun/",description:"Feather-light, ultra-smooth, and surprisingly strong. Pro-level percussion in a design that feels effortless in hand.",image:"https://www.hidow.com/wp-content/uploads/2022/12/Mini3-5.jpg",badge:null},
+  {id:"thermoair-wave",name:"ThermoAir Wave 2.0",category:"percussion",categoryLabel:"Percussion & Compression",price:35,priceDisplay:"$35–$479",url:"https://www.hidow.com/shop/thermoair-wave-compression-wraps/",description:"Stronger compression, deeper heat, and quieter sessions. Wireless wraps for circulation and recovery after long days.",image:"https://www.hidow.com/wp-content/uploads/2023/04/new-thermo-both-wraps-1.jpg",badge:null},
+  {id:"power-duo",name:"Power Duo",category:"percussion",categoryLabel:"Percussion & Compression",price:454,priceDisplay:"$454",url:"https://www.hidow.com/shop/power-duo/",description:"Double-head percussion meets total recovery. Dual heads, three speeds, and four interchangeable attachments.",image:"https://www.hidow.com/wp-content/uploads/2024/10/PowerDuo-Hidow-01.jpg",badge:null},
+  {id:"ocuwave",name:"OcuWave Eye Massager",category:"vibration",categoryLabel:"Vibration Therapy",price:199,priceDisplay:"$199–$249",url:"https://www.hidow.com/shop/ocuwave-eye-massager/",description:"Rhythmic wave massage, soothing heat, vibration, and bone conduction sound therapy to ease eye tension and reduce puffiness.",image:"https://www.hidow.com/wp-content/uploads/2025/10/OcuWave-8.jpg",badge:null},
+  {id:"hd-vibe",name:"HD Vibe Roller",category:"vibration",categoryLabel:"Vibration Therapy",price:99,priceDisplay:"$99",url:"https://www.hidow.com/shop/hd-vibe-roller/",description:"Textured for impact, powered by vibration for deeper recovery. Five vibration levels to target tension and improve flexibility.",image:"https://www.hidow.com/wp-content/uploads/2024/11/486.jpg",badge:null},
+  {id:"triggerflex",name:"TriggerFlex 2.0",category:"vibration",categoryLabel:"Vibration Therapy",price:50,priceDisplay:"$50",url:"https://www.hidow.com/shop/triggerflex-2-0/",description:"Precision acupoint pressure with heat and vibration. Attaches to any smooth surface for hands-free relief.",image:"https://www.hidow.com/wp-content/uploads/2024/10/TriggerFlex-2.0-Main.jpg",badge:null},
+  {id:"acugloves",name:"AcuGloves",category:"wraps",categoryLabel:"Electrotherapy Wraps",price:79,priceDisplay:"$79–$159",url:"https://www.hidow.com/shop/acugloves/",description:"360-degree TENS/EMS electrotherapy from fingertips to wrists. Alleviates arthritis and carpal tunnel syndrome.",image:"https://www.hidow.com/wp-content/uploads/2015/06/Product-Images-1000-x-1000-4.jpg",badge:null},
+  {id:"acuwrist-wrap",name:"AcuWrist Wrap",category:"wraps",categoryLabel:"Electrotherapy Wraps",price:39,priceDisplay:"$39–$119",url:"https://www.hidow.com/shop/acuwrist-wrap/",description:"Lightweight, breathable, designed for precision therapy—your companion for easing tension and boosting wrist mobility.",image:"https://www.hidow.com/wp-content/uploads/2016/07/HiDow-AcuWrist-Wrap-1.jpg",badge:null},
+  {id:"acuelbow-wrap",name:"AcuElbow Wrap",category:"wraps",categoryLabel:"Electrotherapy Wraps",price:49,priceDisplay:"$49–$129",url:"https://www.hidow.com/shop/acuelbow-wrap/",description:"Precision therapy and improved elbow health. Light as a feather, turns elbow care into an art form.",image:"https://www.hidow.com/wp-content/uploads/2016/07/AcuElbow-1.jpg",badge:null},
+  {id:"acuslippers",name:"AcuSlippers",category:"wraps",categoryLabel:"Electrotherapy Wraps",price:49,priceDisplay:"$49–$129",url:"https://www.hidow.com/shop/electrotherapy-slippers/",description:"Advanced electrotherapy and reflexology. Boost circulation, speed recovery, and enjoy unmatched comfort. One size fits most.",image:"https://www.hidow.com/wp-content/uploads/2014/06/AcuSlippers-Both.jpg",badge:null},
+  {id:"revive-head-wrap",name:"Revive Head Wrap & Eye Mask",category:"heat",categoryLabel:"Heat & Light Therapy",price:59,priceDisplay:"$59",url:"https://www.hidow.com/shop/revive-head-wrap-eye-mask/",description:"Cooling or warmth, gentle pressure, and total calm. Built for migraine relief, sinus pressure, and screen fatigue.",image:"https://www.hidow.com/wp-content/uploads/2025/11/Revive-KeyFeatures-HeadEye.jpg",badge:null},
+  {id:"revive-gel-sleeve",name:"Revive Hot & Cold Gel Sleeve",category:"heat",categoryLabel:"Heat & Light Therapy",price:39,priceDisplay:"$39–$124",url:"https://www.hidow.com/shop/revive-hot-cold-gel-sleeve/",description:"Stretch-fit Lycra with dense gel core for even temperature therapy across every contour of the target area.",image:"https://www.hidow.com/wp-content/uploads/2025/11/Revive-KeyFeatures-Sleeve.jpg",badge:null},
+  {id:"hd-glo",name:"HD Glo Red Light Therapy",category:"heat",categoryLabel:"Heat & Light Therapy",price:249,priceDisplay:"$249",url:"https://www.hidow.com/shop/hd-glo-red-light-therapy-torch/",description:"Multi-light power for a holistic wellness boost. HiDow-inspired design meets advanced red light therapy.",image:"https://www.hidow.com/wp-content/uploads/2023/11/HD-GLO-1.jpg",badge:null},
+  {id:"hot-cold-packs",name:"Hot & Cold Therapy Packs",category:"heat",categoryLabel:"Heat & Light Therapy",price:12,priceDisplay:"$12–$29",url:"https://www.hidow.com/shop/hot-cold-therapy-packs-2-pack/",description:"Reusable hot and cold gel packs. Flexible from freezer or microwave, they contour to the area for even relief.",image:"https://www.hidow.com/wp-content/uploads/2025/11/HotCold-Pack-Front-Back-1.jpg",badge:null},
+  {id:"perfect-conductor",name:"Perfect Conductor Spray",category:"accessories",categoryLabel:"Accessories & Sprays",price:19,priceDisplay:"$19",url:"https://www.hidow.com/shop/perfect-conductor/",description:"Boosts conductivity, extends pad life, and delivers smoother, more effective TENS/EMS therapy every session.",image:"https://www.hidow.com/wp-content/uploads/2014/06/perfect-conductor-spray-main-1.jpg",badge:"best-seller"},
+  {id:"magnesium-spray",name:"Magnesium Spray",category:"accessories",categoryLabel:"Accessories & Sprays",price:19,priceDisplay:"$19",url:"https://www.hidow.com/shop/magnesium-spray/",description:"Functional actives and calming botanicals for smoother, calmer, more balanced TENS/EMS sessions.",image:"https://www.hidow.com/wp-content/uploads/2025/11/Magnesium-Spray-Front.jpg",badge:null},
+  {id:"cervical-pads",name:"Cervical Pads",category:"pads",categoryLabel:"Electrode Pads",price:25,priceDisplay:"$25–$40",url:"https://www.hidow.com/shop/cervical-pads/",description:"Shaped for the natural curve of the neck. Focus stimulation on muscles that rarely get proper attention.",image:"https://www.hidow.com/wp-content/uploads/2025/12/Cervical-Pad-Front.jpg",badge:null},
+  {id:"dualpoint-pads",name:"DualPoint Gel Pads",category:"pads",categoryLabel:"Electrode Pads",price:15,priceDisplay:"$15–$50",url:"https://www.hidow.com/shop/dualpoint-gel-pads/",description:"Two snaps. Smooth coverage. Built for shoulders, hips, quads, and calves with independent dual-contact design.",image:"https://www.hidow.com/wp-content/uploads/2025/09/DualPointPads-3-Sizes.jpg",badge:null},
+  {id:"magnapads",name:"MagnaPads",category:"pads",categoryLabel:"Electrode Pads",price:35,priceDisplay:"$35–$100",url:"https://www.hidow.com/shop/magna-pads/",description:"Guided magnetic connection clicks into place with a smooth pull. Soft, flexible faux leather for lasting comfort.",image:"https://www.hidow.com/wp-content/uploads/2025/09/All-3-MagnaPads-1.jpg",badge:null},
+  {id:"heated-electrode-pad",name:"Heated Electrode Pad Set",category:"pads",categoryLabel:"Electrode Pads",price:59,priceDisplay:"$59–$99",url:"https://www.hidow.com/shop/heated-electrode-pad-set/",description:"Heat enhances circulation, relaxes muscles, and boosts relief—all while targeting pain with TENS/EMS precision.",image:"https://www.hidow.com/wp-content/uploads/2022/06/Heated-Electrode-Pad-1.jpg",badge:null},
+  {id:"tactical-carry-bag",name:"Tactical Carry Bag",category:"organization",categoryLabel:"Bags & Organization",price:29,priceDisplay:"$29–$99",url:"https://www.hidow.com/shop/tactical-carry-bag/",description:"Compact, structured, and built to keep your recovery setup organized, clean, and ready for anything.",image:"https://www.hidow.com/wp-content/uploads/2024/11/new-carry-bags-hidow-03.jpg",badge:null},
+  {id:"tactical-backpack",name:"Tactical Backpack",category:"organization",categoryLabel:"Bags & Organization",price:35,priceDisplay:"$35",url:"https://www.hidow.com/shop/tactical-backpack/",description:"Built like a field pack. Sized for everyday use. 25L tactical backpack with structured storage and modular functionality.",image:"https://www.hidow.com/wp-content/uploads/2023/08/25L-tactical-backpack-main.jpg",badge:null},
+];
+
+const CATEGORY_ORDER = [
+  {key:"wireless",label:"Wireless TENS/EMS Devices",icon:"📡"},
+  {key:"wired",label:"Wired TENS/EMS Devices",icon:"🔌"},
+  {key:"percussion",label:"Percussion & Compression",icon:"💪"},
+  {key:"vibration",label:"Vibration Therapy",icon:"〰️"},
+  {key:"wraps",label:"Electrotherapy Wraps",icon:"🤲"},
+  {key:"heat",label:"Heat & Light Therapy",icon:"🔥"},
+  {key:"pads",label:"Electrode Pads",icon:"🔋"},
+  {key:"accessories",label:"Accessories & Sprays",icon:"✨"},
+  {key:"organization",label:"Bags & Organization",icon:"🎒"},
+];
+
+let activeFilter = "all";
+
+function cardHTML(p) {
+  const badge = p.badge === "best-seller" ? `<span class="badge best-seller">Best Seller</span>` : "";
+  return `
+    <a class="card" href="${p.url}" target="_blank" rel="noopener">
+      <div class="card-img">
+        <img src="${p.image}" alt="${p.name}" loading="lazy" onerror="this.src='https://www.hidow.com/wp-content/uploads/2024/10/Product-Images-2.0-6.jpg'"/>
+        ${badge}
+      </div>
+      <div class="card-body">
+        <div class="card-category">${p.categoryLabel}</div>
+        <div class="card-name">${p.name}</div>
+        <div class="card-desc">${p.description}</div>
+        <div class="card-footer">
+          <span class="card-price">${p.priceDisplay}</span>
+          <button class="btn-add" onclick="event.preventDefault();event.stopPropagation();askAgent('${p.name.replace(/'/g,"\\'")}')">Ask Expert</button>
+        </div>
+      </div>
+    </a>`;
+}
+
+function render() {
+  const filtered = activeFilter === "all" ? PRODUCTS : PRODUCTS.filter(p => p.category === activeFilter);
+  const content = document.getElementById("shopContent");
+
+  if (activeFilter !== "all") {
+    content.innerHTML = `
+      <p class="section-count">${filtered.length} products</p>
+      <div class="grid">${filtered.map(cardHTML).join("")}</div>`;
+    return;
+  }
+
+  content.innerHTML = CATEGORY_ORDER.map(cat => {
+    const prods = filtered.filter(p => p.category === cat.key);
+    if (!prods.length) return "";
+    return `
+      <div class="category-section" data-cat="${cat.key}">
+        <div class="cat-header">
+          <span class="cat-icon">${cat.icon}</span>
+          <span class="cat-title">${cat.label}</span>
+          <span class="cat-count">${prods.length} products</span>
+        </div>
+        <div class="grid">${prods.map(cardHTML).join("")}</div>
+      </div>`;
+  }).join("");
+}
+
+// Filter buttons
+document.querySelectorAll(".filter-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    activeFilter = btn.dataset.cat;
+    render();
+    window.scrollTo({top:200,behavior:"smooth"});
+  });
+});
+
+// Ask agent about a product
+function askAgent(productName) {
+  const fab = document.querySelector("button[aria-label]");
+  if (fab && !document.querySelector("[style*='540px']")) fab.click();
+  setTimeout(() => {
+    const ta = document.querySelector("textarea");
+    if (ta) { ta.value = `Tell me more about the ${productName}`; ta.dispatchEvent(new Event("input",{bubbles:true})); ta.focus(); }
+  }, 300);
+}
+
+// Hide chat prompt after 8s or when widget opens
+setTimeout(() => {
+  const el = document.getElementById("chatPrompt");
+  if (el) el.style.display = "none";
+}, 8000);
+
+render();
+</script>
+</body>
+</html>
