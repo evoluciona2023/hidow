@@ -6,5 +6,6 @@ data/sessions/
 data/user_memory/
 data/analytics.jsonl
 *.log
-dist/
+/dist/
+!widget/dist/
 .DS_Store
