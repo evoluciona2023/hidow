@@ -40,6 +40,7 @@ app.post("/api/chat/stream", streamHandler);
 app.get("/api/health", healthHandler);
 app.get("/api/analytics", analyticsHandler);
 app.use(express.static("."));
+app.use(express.static("widget/dist")); // serves hidow-widget.iife.js at root
 
 // ── Telegram ────────────────────────────────────────────────────────
 if (process.env.TELEGRAM_BOT_TOKEN) {
