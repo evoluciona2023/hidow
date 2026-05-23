@@ -3,8 +3,10 @@ import { resolve, dirname } from "path";
 import { fileURLToPath } from "url";
 import { findRelevantProducts, formatProductForPrompt, allProducts } from "../utils/productSearch.js";
 
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
 const upsellMap = JSON.parse(
-  readFileSync(resolve(dirname(fileURLToPath(import.meta.url)), "../../data/upsell.json"), "utf8")
+  readFileSync(resolve(__dirname, "../../data/upsell.json"), "utf8")
 ).upsells;
 
 const productById = Object.fromEntries(allProducts.map(p => [p.id, p]));
@@ -19,11 +21,32 @@ function buildUpsellSection() {
   return lines.join("\n");
 }
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-
 const { faqs } = JSON.parse(
   readFileSync(resolve(__dirname, "../../data/faq.json"), "utf8")
 );
+
+const { reviews } = JSON.parse(
+  readFileSync(resolve(__dirname, "../../data/reviews.json"), "utf8")
+);
+
+const knowledgeBase = JSON.parse(
+  readFileSync(resolve(__dirname, "../../data/knowledge_base.json"), "utf8")
+);
+
+const REVIEWS_SECTION = reviews.slice(0, 8).map(r => {
+  const product = productById[r.product_id];
+  return `- "${r.text}" — ${r.author}${product ? ` (re: ${product.name})` : ""}`;
+}).join("\n");
+
+const KB = knowledgeBase;
+const KNOWLEDGE_SECTION = `
+WARRANTY: ${KB.warranty.devices} Accessories: ${KB.warranty.accessories} Claim: ${KB.warranty.claim}
+SHIPPING: ${KB.shipping.standard} ${KB.shipping.expedited} Processing: ${KB.shipping.processing}
+RETURNS: ${KB.returns.window} Process: ${KB.returns.process} Refund timing: ${KB.returns.refund}
+PAYMENT: ${KB.payment.methods} ${KB.payment.affirm}
+CLINICAL: ${KB.clinical.fda} Contraindications: ${KB.clinical.contraindications}
+SUPPORT: Phone ${KB.support.phone} | Email ${KB.support.email} | Hours: ${KB.support.hours}
+`.trim();
 
 // Category overview — always included, very compact
 const CATEGORY_OVERVIEW = `
@@ -39,7 +62,7 @@ Available product categories:
 - Bags (Tactical Carry Bag $29–$99, Tactical Backpack $35)
 `.trim();
 
-export function buildSystemPrompt(channel = "web", userQuery = "", memoryContext = "") {
+export function buildSystemPrompt(channel = "web", userQuery = "", memoryContext = "", overrideProducts = null) {
   const channelInstructions =
     channel === "telegram"
       ? `
@@ -65,9 +88,8 @@ export function buildSystemPrompt(channel = "web", userQuery = "", memoryContext
 - Product cards are shown automatically below your message.
 `;
 
-  // RAG: inject only the products most relevant to this query
-  // Falls back to a curated default set for generic queries
-  const relevantProducts = findRelevantProducts(userQuery, 6);
+  // Use semantic search results if provided, otherwise fall back to keyword search
+  const relevantProducts = overrideProducts || findRelevantProducts(userQuery, 6);
   const productsSection = relevantProducts
     .map(formatProductForPrompt)
     .join("\n\n---\n\n");
@@ -100,6 +122,12 @@ ${CATEGORY_OVERVIEW}
 (These are the products most relevant to the current conversation. If the user asks about other products, say you can provide more details and ask them to specify.)
 
 ${productsSection}
+
+## POLICIES & SUPPORT KNOWLEDGE BASE
+${KNOWLEDGE_SECTION}
+
+## CUSTOMER TESTIMONIALS (use to build trust when recommending these products)
+${REVIEWS_SECTION}
 
 ## FREQUENTLY ASKED QUESTIONS
 ${JSON.stringify(faqs, null, 2)}

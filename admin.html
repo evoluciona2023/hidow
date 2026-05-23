@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>HiDow Admin</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f0f2f5;color:#1a1a2e;min-height:100vh}
+.header{background:#1a1a2e;color:white;padding:16px 24px;display:flex;align-items:center;justify-content:space-between}
+.header h1{font-size:18px;font-weight:600}
+.header span{font-size:12px;opacity:.7}
+#login-screen{max-width:380px;margin:80px auto;background:white;border-radius:12px;padding:32px;box-shadow:0 4px 20px rgba(0,0,0,.1)}
+#login-screen h2{margin-bottom:20px;font-size:20px;text-align:center}
+.field{margin-bottom:16px}
+.field label{display:block;font-size:13px;font-weight:600;margin-bottom:6px;color:#555}
+.field input,.field select{width:100%;padding:9px 12px;border:1px solid #ddd;border-radius:6px;font-size:14px;outline:none}
+.field input:focus{border-color:#2563eb}
+.btn{background:#1a1a2e;color:white;border:none;padding:10px 20px;border-radius:6px;font-size:14px;cursor:pointer;font-weight:600}
+.btn:hover{background:#2d2d4e}
+.btn-sm{padding:6px 14px;font-size:12px}
+.btn-danger{background:#dc2626}
+.btn-danger:hover{background:#b91c1c}
+.btn-success{background:#16a34a}
+.btn-success:hover{background:#15803d}
+.btn-secondary{background:#6b7280}
+.btn-secondary:hover{background:#4b5563}
+#dashboard{padding:24px;max-width:1200px;margin:0 auto;display:none}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;margin-bottom:28px}
+.stat-card{background:white;border-radius:10px;padding:20px;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.stat-card .num{font-size:32px;font-weight:700;color:#1a1a2e}
+.stat-card .label{font-size:12px;color:#888;margin-top:4px}
+.section{background:white;border-radius:10px;padding:20px;box-shadow:0 1px 4px rgba(0,0,0,.08);margin-bottom:24px}
+.section h2{font-size:15px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{padding:10px 12px;text-align:left;font-size:11px;color:#888;font-weight:600;border-bottom:2px solid #eee;text-transform:uppercase;letter-spacing:.4px}
+td{padding:10px 12px;border-bottom:1px solid #f0f2f5;vertical-align:middle}
+tr:last-child td{border-bottom:none}
+.badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600}
+.badge-confirmed{background:#dbeafe;color:#1e40af}
+.badge-shipped{background:#d1fae5;color:#065f46}
+.badge-pending{background:#fef3c7;color:#92400e}
+.badge-active{background:#d1fae5;color:#065f46}
+.badge-inactive{background:#fee2e2;color:#991b1b}
+.tab-bar{display:flex;gap:4px;margin-bottom:20px;background:#f0f2f5;border-radius:8px;padding:4px}
+.tab{padding:8px 18px;border-radius:6px;cursor:pointer;font-size:13px;font-weight:600;color:#666;border:none;background:none}
+.tab.active{background:white;color:#1a1a2e;box-shadow:0 1px 3px rgba(0,0,0,.1)}
+.tab:hover:not(.active){color:#1a1a2e}
+#tabs-content>div{display:none}
+#tabs-content>div.active{display:block}
+.form-row{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap}
+.form-row .field{margin-bottom:0;flex:1;min-width:120px}
+.error{color:#dc2626;font-size:13px;margin-top:8px}
+.success{color:#16a34a;font-size:13px;margin-top:8px}
+.empty{color:#888;font-size:13px;padding:20px;text-align:center}
+.loading{color:#888;font-size:13px;padding:12px;text-align:center}
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
+.topbar h2{font-size:22px;font-weight:700}
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>HiDow Admin</h1>
+  <span id="admin-label">Not logged in</span>
+</div>
+
+<!-- Login -->
+<div id="login-screen">
+  <h2>🔐 Admin Login</h2>
+  <div class="field">
+    <label>Admin Password</label>
+    <input type="password" id="token-input" placeholder="Enter admin password" onkeydown="if(event.key==='Enter')login()"/>
+  </div>
+  <button class="btn" style="width:100%" onclick="login()">Login</button>
+  <div id="login-error" class="error"></div>
+</div>
+
+<!-- Dashboard -->
+<div id="dashboard">
+  <div class="topbar">
+    <h2>Dashboard</h2>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-sm btn-secondary" onclick="exportCsv()">⬇ Export CSV</button>
+      <button class="btn btn-sm btn-danger" onclick="logout()">Logout</button>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-grid" id="stats-grid">
+    <div class="stat-card"><div class="num">—</div><div class="label">Conversations</div></div>
+    <div class="stat-card"><div class="num">—</div><div class="label">Messages</div></div>
+    <div class="stat-card"><div class="num">—</div><div class="label">Orders</div></div>
+    <div class="stat-card"><div class="num">—</div><div class="label">Leads</div></div>
+    <div class="stat-card"><div class="num">—</div><div class="label">Handoffs</div></div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tab-bar">
+    <button class="tab active" onclick="showTab('orders')">Orders</button>
+    <button class="tab" onclick="showTab('discounts')">Discount Codes</button>
+    <button class="tab" onclick="showTab('order-lookup')">Order Lookup</button>
+  </div>
+
+  <div id="tabs-content">
+    <!-- Orders -->
+    <div id="tab-orders" class="active">
+      <div class="section">
+        <h2>Recent Orders <span style="font-weight:400;font-size:12px;color:#888">(last 100)</span></h2>
+        <div id="orders-table"><div class="loading">Loading...</div></div>
+      </div>
+    </div>
+
+    <!-- Discounts -->
+    <div id="tab-discounts">
+      <div class="section">
+        <h2>Discount Codes</h2>
+        <div class="form-row" style="margin-bottom:20px">
+          <div class="field">
+            <label>Code</label>
+            <input type="text" id="dc-code" placeholder="e.g. SUMMER25" style="text-transform:uppercase"/>
+          </div>
+          <div class="field">
+            <label>Discount %</label>
+            <input type="number" id="dc-percent" placeholder="10" min="1" max="100"/>
+          </div>
+          <div class="field">
+            <label>Max Uses (blank=unlimited)</label>
+            <input type="number" id="dc-max" placeholder="100" min="1"/>
+          </div>
+          <button class="btn btn-success btn-sm" onclick="createDiscount()" style="margin-bottom:0;white-space:nowrap">+ Create</button>
+        </div>
+        <div id="dc-msg"></div>
+        <div id="discounts-table"><div class="loading">Loading...</div></div>
+      </div>
+    </div>
+
+    <!-- Order Lookup -->
+    <div id="tab-order-lookup">
+      <div class="section">
+        <h2>Order Lookup</h2>
+        <div class="form-row" style="margin-bottom:20px">
+          <div class="field">
+            <label>Order Reference</label>
+            <input type="text" id="lookup-ref" placeholder="ORD-2025-12345" style="text-transform:uppercase"
+                   onkeydown="if(event.key==='Enter')lookupOrder()"/>
+          </div>
+          <button class="btn btn-sm" onclick="lookupOrder()" style="margin-bottom:0">Look Up</button>
+        </div>
+        <div id="lookup-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+let TOKEN = sessionStorage.getItem("hidow_admin_token") || "";
+
+function getHeaders() {
+  return { "Content-Type": "application/json", "X-Admin-Token": TOKEN };
+}
+
+async function login() {
+  const input = document.getElementById("token-input");
+  TOKEN = input.value.trim();
+  if (!TOKEN) { document.getElementById("login-error").textContent = "Please enter a password."; return; }
+  try {
+    const res = await fetch("/api/admin/summary", { headers: getHeaders() });
+    if (!res.ok) { document.getElementById("login-error").textContent = "Invalid password."; return; }
+    sessionStorage.setItem("hidow_admin_token", TOKEN);
+    showDashboard(await res.json());
+  } catch (e) {
+    document.getElementById("login-error").textContent = "Connection error: " + e.message;
+  }
+}
+
+function logout() {
+  sessionStorage.removeItem("hidow_admin_token");
+  TOKEN = "";
+  document.getElementById("login-screen").style.display = "block";
+  document.getElementById("dashboard").style.display = "none";
+  document.getElementById("admin-label").textContent = "Not logged in";
+  document.getElementById("token-input").value = "";
+}
+
+function showTab(name) {
+  document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+  document.querySelectorAll("#tabs-content > div").forEach(d => d.classList.remove("active"));
+  event.target.classList.add("active");
+  document.getElementById("tab-" + name).classList.add("active");
+}
+
+function showDashboard(data) {
+  document.getElementById("login-screen").style.display = "none";
+  document.getElementById("dashboard").style.display = "block";
+  document.getElementById("admin-label").textContent = "Logged in ✓";
+  renderStats(data.summary);
+  renderOrders(data.orders || []);
+  renderDiscounts(data.discountCodes || []);
+}
+
+function renderStats(s) {
+  if (!s) return;
+  const grid = document.getElementById("stats-grid");
+  const nums = [s.total_conversations, s.total_messages, s.orders_completed, s.leads_captured, s.handoffs_requested];
+  const labels = ["Conversations","Messages","Orders","Leads","Handoffs"];
+  grid.innerHTML = nums.map((n,i) => `
+    <div class="stat-card"><div class="num">${n ?? "—"}</div><div class="label">${labels[i]}</div></div>`
+  ).join("");
+}
+
+function renderOrders(orders) {
+  const el = document.getElementById("orders-table");
+  if (!orders.length) { el.innerHTML = '<div class="empty">No orders yet.</div>'; return; }
+  el.innerHTML = `<table>
+    <thead><tr>
+      <th>Ref</th><th>Customer</th><th>Email</th><th>Total</th><th>Items</th><th>Status</th><th>Date</th>
+    </tr></thead>
+    <tbody>${orders.map(o => `<tr>
+      <td><strong>${o.order_ref}</strong></td>
+      <td>${o.customer_name || "—"}</td>
+      <td><a href="mailto:${o.customer_email}" style="color:#2563eb">${o.customer_email || "—"}</a></td>
+      <td><strong>$${Number(o.order_total||0).toFixed(2)}</strong></td>
+      <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">
+        ${Array.isArray(o.order_items) ? o.order_items.map(i=>i.product_name||i).join(", ") : "—"}
+      </td>
+      <td><span class="badge badge-${o.status||'confirmed'}">${o.status||"confirmed"}</span></td>
+      <td>${o.created_at ? new Date(o.created_at).toLocaleDateString() : "—"}</td>
+    </tr>`).join("")}</tbody></table>`;
+}
+
+function renderDiscounts(codes) {
+  const el = document.getElementById("discounts-table");
+  if (!codes.length) { el.innerHTML = '<div class="empty">No discount codes.</div>'; return; }
+  el.innerHTML = `<table>
+    <thead><tr><th>Code</th><th>Discount</th><th>Used</th><th>Max Uses</th><th>Status</th><th>Actions</th></tr></thead>
+    <tbody>${codes.map(c => `<tr>
+      <td><strong>${c.code}</strong></td>
+      <td>${c.discount_percent}%</td>
+      <td>${c.used_count || 0}</td>
+      <td>${c.max_uses || "∞"}</td>
+      <td><span class="badge badge-${c.active ? 'active' : 'inactive'}">${c.active ? "Active" : "Inactive"}</span></td>
+      <td>
+        ${c.active
+          ? `<button class="btn btn-sm btn-danger" onclick="toggleDiscount('${c.code}','deactivate')">Deactivate</button>`
+          : `<button class="btn btn-sm btn-success" onclick="toggleDiscount('${c.code}','activate')">Activate</button>`}
+      </td>
+    </tr>`).join("")}</tbody></table>`;
+}
+
+async function createDiscount() {
+  const code = document.getElementById("dc-code").value.trim().toUpperCase();
+  const percent = parseFloat(document.getElementById("dc-percent").value);
+  const max = document.getElementById("dc-max").value;
+  const msg = document.getElementById("dc-msg");
+  if (!code || !percent) { msg.className="error"; msg.textContent="Code and discount % are required."; return; }
+  try {
+    const res = await fetch("/api/admin/discounts", {
+      method: "POST", headers: getHeaders(),
+      body: JSON.stringify({ action: "create", code, discount_percent: percent, max_uses: max ? parseInt(max) : null })
+    });
+    const data = await res.json();
+    if (data.ok) {
+      msg.className="success"; msg.textContent=`Code ${code} created/updated.`;
+      document.getElementById("dc-code").value = "";
+      document.getElementById("dc-percent").value = "";
+      document.getElementById("dc-max").value = "";
+      reloadDiscounts();
+    } else { msg.className="error"; msg.textContent = data.error || "Error."; }
+  } catch(e) { msg.className="error"; msg.textContent = e.message; }
+}
+
+async function toggleDiscount(code, action) {
+  try {
+    await fetch("/api/admin/discounts", {
+      method: "POST", headers: getHeaders(),
+      body: JSON.stringify({ action, code })
+    });
+    reloadDiscounts();
+  } catch(e) { alert(e.message); }
+}
+
+async function reloadDiscounts() {
+  try {
+    const res = await fetch("/api/admin/summary", { headers: getHeaders() });
+    const data = await res.json();
+    renderDiscounts(data.discountCodes || []);
+  } catch { /* ignore */ }
+}
+
+async function lookupOrder() {
+  const ref = document.getElementById("lookup-ref").value.trim().toUpperCase();
+  const el = document.getElementById("lookup-result");
+  if (!ref) { el.innerHTML = '<div class="error">Enter an order reference.</div>'; return; }
+  el.innerHTML = '<div class="loading">Looking up...</div>';
+  try {
+    const res = await fetch(`/api/orders/${ref}`, { headers: getHeaders() });
+    if (res.status === 404) { el.innerHTML = '<div class="error">Order not found.</div>'; return; }
+    const o = await res.json();
+    el.innerHTML = `
+      <div style="background:#f8f9fa;border-radius:8px;padding:16px">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:14px">
+          <div><strong>Ref:</strong> ${o.orderRef}</div>
+          <div><strong>Status:</strong> <span class="badge badge-${o.status}">${o.status}</span></div>
+          <div><strong>Customer:</strong> ${o.customerName}</div>
+          <div><strong>Total:</strong> $${Number(o.total||0).toFixed(2)}</div>
+          <div style="grid-column:1/-1"><strong>Items:</strong>
+            ${Array.isArray(o.items) ? o.items.map(i=>`${i.product_name} x${i.quantity}`).join(", ") : "—"}
+          </div>
+          <div style="grid-column:1/-1"><strong>Placed:</strong> ${o.createdAt ? new Date(o.createdAt).toLocaleString() : "—"}</div>
+        </div>
+      </div>`;
+  } catch(e) { el.innerHTML = `<div class="error">${e.message}</div>`; }
+}
+
+async function exportCsv() {
+  const url = `/api/admin/export.csv`;
+  const a = document.createElement("a");
+  a.href = url;
+  a.setAttribute("download", "");
+  // Pass token via query string is insecure; fetch and create blob instead
+  try {
+    const res = await fetch(url, { headers: getHeaders() });
+    const blob = await res.blob();
+    a.href = URL.createObjectURL(blob);
+    a.download = `hidow-analytics-${new Date().toISOString().slice(0,10)}.csv`;
+    a.click();
+  } catch(e) { alert("Export failed: " + e.message); }
+}
+
+// Auto-login if token in session storage
+(async () => {
+  if (!TOKEN) return;
+  try {
+    const res = await fetch("/api/admin/summary", { headers: getHeaders() });
+    if (res.ok) showDashboard(await res.json());
+    else { sessionStorage.removeItem("hidow_admin_token"); TOKEN = ""; }
+  } catch { /* ignore */ }
+})();
+</script>
+</body>
+</html>

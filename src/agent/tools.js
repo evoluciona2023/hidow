@@ -107,4 +107,20 @@ export const tools = [
       },
     },
   },
+  {
+    type: "function",
+    function: {
+      name: "check_order_status",
+      description:
+        "Look up the status of an existing HiDow order. " +
+        "Call when the user provides an order reference number starting with ORD-.",
+      parameters: {
+        type: "object",
+        properties: {
+          order_ref: { type: "string", description: "The order reference (e.g. ORD-2025-12345)" },
+        },
+        required: ["order_ref"],
+      },
+    },
+  },
 ];

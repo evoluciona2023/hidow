@@ -37,6 +37,40 @@ INSERT INTO discount_codes (code, discount_percent, max_uses) VALUES
   ('WELCOME15', 15, 50),
   ('PAIN20', 20, 30)
 ON CONFLICT (code) DO NOTHING;
+
+CREATE TABLE IF NOT EXISTS orders (
+  order_ref VARCHAR(50) PRIMARY KEY,
+  customer_name VARCHAR(255),
+  customer_email VARCHAR(255),
+  shipping_address TEXT,
+  order_items JSONB,
+  order_total NUMERIC,
+  discount_code VARCHAR(50),
+  language VARCHAR(5),
+  status VARCHAR(50) DEFAULT 'confirmed',
+  channel VARCHAR(50),
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS message_feedback (
+  id SERIAL PRIMARY KEY,
+  session_id VARCHAR(255),
+  message_index INTEGER,
+  rating VARCHAR(10),
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS abandoned_purchases (
+  session_id VARCHAR(255) PRIMARY KEY,
+  email VARCHAR(255),
+  name VARCHAR(255),
+  cart_data JSONB,
+  step INTEGER,
+  email_sent BOOLEAN DEFAULT FALSE,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
 `;
 
 export async function runMigrations() {

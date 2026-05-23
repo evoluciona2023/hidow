@@ -1,0 +1,16 @@
+{
+  "reviews": [
+    { "product_id": "pro-touch-6-12", "author": "Maria G.", "rating": 5, "text": "I've had chronic back pain for years. The Pro Touch 6-12 changed my life — I use it every morning and can finally sleep through the night." },
+    { "product_id": "pro-touch-6-12", "author": "James T.", "rating": 5, "text": "As a physical therapist I recommend HiDow to my patients. The Pro Touch is professional-grade at a fraction of clinic cost." },
+    { "product_id": "hidow-spot", "author": "Sandra R.", "rating": 5, "text": "Perfect for travel. Small, wireless, and works great on my neck after long flights. Best $119 I ever spent." },
+    { "product_id": "xpd-12", "author": "Carlos M.", "rating": 5, "text": "I'm a runner and this is my post-race recovery tool. The 12 modes are exactly what I need for different muscle groups." },
+    { "product_id": "acugloves", "author": "Dorothy K.", "rating": 5, "text": "My arthritis pain dropped dramatically. I wear these for 30 minutes in the morning and my hands feel 10 years younger." },
+    { "product_id": "wireless-4-9", "author": "Robert P.", "rating": 5, "text": "I bought this for my shoulder injury. My doctor was impressed with the recovery speed. The independent controls are a game changer." },
+    { "product_id": "hd-mini2", "author": "Lisa N.", "rating": 5, "text": "This massage gun is surprisingly powerful for its size. I use it after every workout and my recovery time has been cut in half." },
+    { "product_id": "thermoair-wave", "author": "Michael B.", "rating": 5, "text": "After standing all day at work my legs were killing me. ThermoAir Wave compression wraps fixed that completely." },
+    { "product_id": "perfect-conductor", "author": "Angela S.", "rating": 5, "text": "Don't skip this spray — it makes a noticeable difference in therapy intensity and my pads last 3x longer." },
+    { "product_id": "xpds-18", "author": "David L.", "rating": 5, "text": "The microcurrent mode on the XPDS 18 is incredible for recovery. 18 modes means I never run out of options." },
+    { "product_id": "ocuwave", "author": "Jennifer H.", "rating": 5, "text": "I get migraines from screen time. The OcuWave has become my daily ritual — 15 minutes and the tension is gone." },
+    { "product_id": "acuslippers", "author": "Frank O.", "rating": 5, "text": "I'm diabetic and have foot pain constantly. These slippers are the only thing that actually gives me relief." }
+  ]
+}

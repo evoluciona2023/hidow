@@ -4,17 +4,30 @@ import { MessageBubble } from "./MessageBubble.jsx";
 import { TypingIndicator } from "./TypingIndicator.jsx";
 import { QuickReplies } from "./QuickReplies.jsx";
 import { VoiceInput } from "./VoiceInput.jsx";
+import { ImageInput } from "./ImageInput.jsx";
 
 const PROACTIVE_DELAY_MS = 15_000;
 
+function useIsMobile() {
+  const [mobile, setMobile] = useState(() => window.innerWidth < 640);
+  useEffect(() => {
+    const h = () => setMobile(window.innerWidth < 640);
+    window.addEventListener("resize", h);
+    return () => window.removeEventListener("resize", h);
+  }, []);
+  return mobile;
+}
+
 export function ChatWindow() {
-  const { messages, isLoading, emailSent, sendMessage } = useChat();
+  const { messages, isLoading, emailSent, sendMessage, submitFeedback, sessionId } = useChat();
   const [input, setInput] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [showBadge, setShowBadge] = useState(false);
+  const [lang, setLang] = useState("auto"); // "auto" | "en" | "es"
   const bottomRef = useRef(null);
   const inputRef = useRef(null);
   const proactiveTimer = useRef(null);
+  const isMobile = useIsMobile();
 
   // Proactive open after 15 s if user hasn't opened yet
   useEffect(() => {
@@ -35,7 +48,7 @@ export function ChatWindow() {
     if (isOpen) {
       setShowBadge(false);
       clearTimeout(proactiveTimer.current);
-      inputRef.current?.focus();
+      setTimeout(() => inputRef.current?.focus(), 100);
     }
   }, [isOpen]);
 
@@ -58,12 +71,31 @@ export function ChatWindow() {
     setTimeout(() => sendMessage(text), 50);
   };
 
+  const handleImageRecommendation = (text) => {
+    sendMessage(`[Photo analysis] ${text}`);
+  };
+
+  const handleLangChange = (newLang) => {
+    if (newLang === lang) return;
+    setLang(newLang);
+    const hint = newLang === "es"
+      ? "Por favor responde en español de ahora en adelante."
+      : "Please respond in English from now on.";
+    sendMessage(hint);
+  };
+
   const showQuickReplies = messages.length === 0 && !isLoading;
+
+  const panelStyle = isMobile
+    ? { ...styles.panel, bottom: 0, right: 0, left: 0, top: 0, width: "100%", height: "100%", borderRadius: 0 }
+    : styles.panel;
+
+  const fabStyle = isMobile && isOpen ? { display: "none" } : {};
 
   return (
     <>
       {/* Floating button */}
-      <div style={{ position: "fixed", bottom: 24, right: 24, zIndex: 9998 }}>
+      <div style={{ position: "fixed", bottom: 24, right: 24, zIndex: 9998, ...fabStyle }}>
         {showBadge && !isOpen && (
           <div style={styles.badge}>1</div>
         )}
@@ -78,13 +110,37 @@ export function ChatWindow() {
 
       {/* Chat panel */}
       {isOpen && (
-        <div style={styles.panel}>
+        <div style={panelStyle}>
           {/* Header */}
           <div style={styles.header}>
-            <div>
+            <div style={{ flex: 1 }}>
               <div style={styles.headerTitle}>HiDow Assistant</div>
               <div style={styles.headerSub}>TENS/EMS Expert · Sales Support</div>
             </div>
+
+            {/* Language selector */}
+            <div style={styles.langRow}>
+              {["en", "es"].map(l => (
+                <button
+                  key={l}
+                  style={{ ...styles.langBtn, ...(lang === l ? styles.langActive : {}) }}
+                  onClick={() => handleLangChange(l)}
+                >
+                  {l === "en" ? "EN" : "ES"}
+                </button>
+              ))}
+            </div>
+
+            {/* Close button on mobile */}
+            {isMobile && (
+              <button
+                style={styles.closeBtn}
+                onClick={() => setIsOpen(false)}
+                aria-label="Close chat"
+              >
+                ✕
+              </button>
+            )}
           </div>
 
           {/* Messages */}
@@ -98,7 +154,15 @@ export function ChatWindow() {
             )}
 
             {messages.map((m, i) => (
-              <MessageBubble key={i} role={m.role} content={m.content} streaming={m.streaming} products={m.products} />
+              <MessageBubble
+                key={i}
+                index={i}
+                role={m.role}
+                content={m.content}
+                streaming={m.streaming}
+                products={m.products}
+                onFeedback={submitFeedback}
+              />
             ))}
 
             {isLoading && <TypingIndicator />}
@@ -119,6 +183,11 @@ export function ChatWindow() {
 
           {/* Input */}
           <div style={styles.inputArea}>
+            <ImageInput
+              onRecommendation={handleImageRecommendation}
+              sessionId={sessionId}
+              disabled={isLoading}
+            />
             <textarea
               ref={inputRef}
               rows={1}
@@ -181,7 +250,7 @@ const styles = {
     bottom: 92,
     right: 24,
     width: 360,
-    height: 540,
+    height: 560,
     background: "white",
     borderRadius: 12,
     boxShadow: "0 8px 32px rgba(0,0,0,.18)",
@@ -194,13 +263,44 @@ const styles = {
   header: {
     background: "#1a1a2e",
     color: "white",
-    padding: "14px 16px",
+    padding: "12px 14px",
     display: "flex",
     alignItems: "center",
-    gap: 10,
+    gap: 8,
   },
   headerTitle: { fontSize: 15, fontWeight: 600 },
   headerSub: { fontSize: 11, opacity: 0.7, marginTop: 1 },
+  langRow: {
+    display: "flex",
+    gap: 4,
+    flexShrink: 0,
+  },
+  langBtn: {
+    background: "rgba(255,255,255,.15)",
+    border: "1px solid rgba(255,255,255,.25)",
+    borderRadius: 5,
+    color: "rgba(255,255,255,.7)",
+    fontSize: 11,
+    fontWeight: 700,
+    padding: "3px 8px",
+    cursor: "pointer",
+    letterSpacing: ".5px",
+  },
+  langActive: {
+    background: "rgba(255,255,255,.95)",
+    color: "#1a1a2e",
+    borderColor: "white",
+  },
+  closeBtn: {
+    background: "none",
+    border: "none",
+    color: "rgba(255,255,255,.8)",
+    fontSize: 18,
+    cursor: "pointer",
+    padding: "4px 6px",
+    marginLeft: 4,
+    flexShrink: 0,
+  },
   messages: {
     flex: 1,
     overflowY: "auto",
@@ -229,29 +329,33 @@ const styles = {
   },
   inputArea: {
     display: "flex",
-    gap: 8,
-    padding: "10px 12px",
+    gap: 6,
+    padding: "10px 10px",
     borderTop: "1px solid #eee",
+    alignItems: "flex-end",
   },
   input: {
     flex: 1,
     border: "1px solid #ddd",
     borderRadius: 8,
-    padding: "8px 12px",
+    padding: "8px 10px",
     fontSize: 13,
     fontFamily: "inherit",
     resize: "none",
     outline: "none",
+    minHeight: 36,
+    maxHeight: 100,
   },
   sendBtn: {
     background: "#2563eb",
     color: "white",
     border: "none",
     borderRadius: 8,
-    padding: "8px 14px",
+    padding: "8px 12px",
     fontSize: 16,
     cursor: "pointer",
     transition: "opacity .15s",
     flexShrink: 0,
+    lineHeight: 1,
   },
 };

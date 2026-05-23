@@ -186,6 +186,68 @@ export async function sendOrderConfirmationEmail(order) {
   }
 }
 
+// ── Abandoned purchase email ───────────────────────────────────────
+export async function sendAbandonmentEmail({ email, name, language, cartData }) {
+  const es = language === "es";
+  const productList = Array.isArray(cartData)
+    ? cartData.map(i => `<li>${i.product_name || i} — $${i.price?.toFixed(2) || ""}</li>`).join("")
+    : "";
+
+  const html = `
+    <div style="font-family:Arial,sans-serif;max-width:600px;margin:auto">
+      <div style="background:#1a1a2e;padding:24px;text-align:center;border-radius:8px 8px 0 0">
+        <img src="https://www.hidow.com/wp-content/uploads/2024/04/HiDow-International-Black-Logo.svg"
+             alt="HiDow" height="36" style="filter:invert(1)"/>
+      </div>
+      <div style="background:white;padding:28px;border:1px solid #eee;border-radius:0 0 8px 8px">
+        <h2 style="color:#1a1a2e;margin:0 0 12px">
+          ${es ? `Hola ${name || ""}, ¿olvidaste algo?` : `Hey ${name || ""}, you left something behind!`}
+        </h2>
+        <p style="color:#444;line-height:1.6">
+          ${es
+            ? "Notamos que estabas explorando nuestros dispositivos de terapia TENS/EMS. ¿Podemos ayudarte a completar tu pedido?"
+            : "We noticed you were exploring our TENS/EMS therapy devices. Can we help you complete your order?"}
+        </p>
+        ${productList ? `
+          <div style="background:#f8f9fa;border-radius:6px;padding:16px;margin:16px 0">
+            <h3 style="margin:0 0 10px;font-size:14px;color:#1a1a2e">${es ? "Tu selección:" : "Your selection:"}</h3>
+            <ul style="margin:0;padding-left:20px;color:#444;font-size:14px">${productList}</ul>
+          </div>` : ""}
+        <div style="background:#f0f7ff;border-left:4px solid #2563eb;border-radius:4px;padding:14px;margin:16px 0">
+          <strong style="color:#1e40af">
+            ${es ? "🎁 Usa el código HIDOW10 para 10% de descuento en tu primer pedido" : "🎁 Use code HIDOW10 for 10% off your first order"}
+          </strong>
+        </div>
+        <p style="text-align:center;margin:20px 0 8px">
+          <a href="https://hidow-production.up.railway.app/shop.html"
+             style="background:#2563eb;color:white;padding:12px 28px;border-radius:6px;text-decoration:none;font-weight:600;display:inline-block">
+            ${es ? "Continuar comprando →" : "Continue Shopping →"}
+          </a>
+        </p>
+        <p style="color:#888;font-size:13px;text-align:center;margin-top:16px">
+          ${es ? "¿Preguntas? Llámanos:" : "Questions? Call us:"} <a href="tel:3145692888" style="color:#2563eb">(314) 569-2888</a>
+        </p>
+        <p style="color:#bbb;font-size:11px;text-align:center;margin-top:12px">
+          HiDow International · <a href="https://www.hidow.com" style="color:#bbb">hidow.com</a>
+        </p>
+      </div>
+    </div>`;
+
+  try {
+    await transporter.sendMail({
+      from: `"HiDow International" <${process.env.SMTP_FROM}>`,
+      to: email,
+      subject: es ? "¿Olvidaste completar tu pedido? 🛒" : "Did you forget something? 🛒",
+      html,
+    });
+    logger.info("Abandonment email sent", { email });
+    return { success: true };
+  } catch (error) {
+    logger.error("Abandonment email failed", { error: error.message });
+    return { success: false, error: error.message };
+  }
+}
+
 // ── Lead capture notification ──────────────────────────────────────
 export async function sendLeadCaptureEmail({ name, email, interests, language }) {
   const es = language === "es";

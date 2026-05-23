@@ -8,13 +8,18 @@ import { execFile } from "child_process";
 import { chatHandler, streamHandler } from "./src/api/chat.js";
 import { healthHandler } from "./src/api/health.js";
 import { analyticsHandler } from "./src/api/analytics.js";
+import { feedbackHandler } from "./src/api/feedback.js";
+import { visionHandler } from "./src/api/vision.js";
+import { adminSummaryHandler, adminOrdersHandler, adminDiscountHandler, adminCsvHandler, orderStatusHandler } from "./src/api/admin.js";
 import { setupTelegramWebhook } from "./src/telegram/bot.js";
 import { registerTelegramHandlers } from "./src/telegram/webhookHandler.js";
 import { registerWhatsAppHandlers } from "./src/whatsapp/whatsappHandler.js";
 import { registerSmsHandlers } from "./src/sms/smsHandler.js";
 import { purgeExpiredSessions, getActiveSessions } from "./src/agent/sessionStore.js";
 import { getAnalytics, buildSummary } from "./src/utils/analytics.js";
+import { sendAbandonmentEmail } from "./src/email/emailService.js";
 import { runMigrations } from "./src/db/migrate.js";
+import { query, hasDatabase } from "./src/db/database.js";
 import { logger } from "./src/utils/logger.js";
 import { createTransport } from "nodemailer";
 
@@ -51,6 +56,19 @@ app.post("/api/chat", chatHandler);
 app.post("/api/chat/stream", streamHandler);
 app.get("/api/health", healthHandler);
 app.get("/api/analytics", analyticsHandler);
+
+// ── API routes ──────────────────────────────────────────────────────
+app.post("/api/feedback", feedbackHandler);
+app.post("/api/vision", visionHandler);
+
+// Admin routes (protected by X-Admin-Token header)
+app.get("/api/admin/summary", adminSummaryHandler);
+app.get("/api/admin/orders", adminOrdersHandler);
+app.post("/api/admin/discounts", adminDiscountHandler);
+app.get("/api/admin/export.csv", adminCsvHandler);
+
+// Order status (public, by ref)
+app.get("/api/orders/:orderRef", orderStatusHandler);
 
 // Live conversations endpoint
 app.get("/api/conversations", async (req, res) => {
@@ -152,6 +170,33 @@ cron.schedule("0 8 * * 1", async () => {
     logger.info("Weekly report sent");
   } catch (e) {
     logger.error("Weekly report failed", { error: e.message });
+  }
+}, { timezone: "America/Chicago" });
+
+// ── Hourly abandoned purchase check ─────────────────────────────────
+cron.schedule("0 * * * *", async () => {
+  if (!hasDatabase()) return;
+  try {
+    const res = await query(
+      `SELECT * FROM abandoned_purchases
+       WHERE email_sent = FALSE AND email IS NOT NULL
+         AND created_at < NOW() - INTERVAL '24 hours'
+       LIMIT 50`
+    );
+    for (const row of res.rows) {
+      const r = await sendAbandonmentEmail({
+        email: row.email,
+        name: row.name,
+        language: "en",
+        cartData: row.cart_data || [],
+      });
+      if (r.success) {
+        await query("UPDATE abandoned_purchases SET email_sent = TRUE WHERE session_id = $1", [row.session_id]);
+        logger.info("Abandonment email sent", { email: row.email });
+      }
+    }
+  } catch (e) {
+    logger.error("Abandonment cron failed", { error: e.message });
   }
 }, { timezone: "America/Chicago" });
 

@@ -7,6 +7,7 @@ import { getHistory, saveHistory } from "./sessionStore.js";
 import { sendOrderConfirmationEmail, sendLeadCaptureEmail, sendHumanHandoffEmail } from "../email/emailService.js";
 import { saveUserMemory, buildMemoryContext } from "./userMemory.js";
 import { allProducts } from "../utils/productSearch.js";
+import { semanticSearch } from "../utils/embeddings.js";
 import { trackEvent } from "../utils/analytics.js";
 import { query, hasDatabase } from "../db/database.js";
 import { logger } from "../utils/logger.js";
@@ -68,7 +69,87 @@ async function notifyCRM(data) {
   }
 }
 
-// ── Discount code validation ──────────────────────────────────────
+// ── Admin Telegram notification ────────────────────────────────────
+async function notifyAdminTelegram(orderRef, order) {
+  const token = process.env.TELEGRAM_BOT_TOKEN;
+  const chatId = process.env.ADMIN_TELEGRAM_CHAT_ID;
+  if (!token || !chatId) return;
+
+  const itemList = (order.order_items || [])
+    .map(i => `• ${i.product_name} x${i.quantity} — $${Number(i.price).toFixed(2)}`)
+    .join("\n");
+
+  const text = [
+    `🛒 *Nueva Orden Recibida*`,
+    `Ref: \`${orderRef}\``,
+    `Cliente: ${order.customer_name}`,
+    `Email: ${order.customer_email}`,
+    `Total: *$${Number(order.order_total).toFixed(2)} USD*`,
+    itemList,
+    `Idioma: ${order.language === "es" ? "🇪🇸 Español" : "🇺🇸 English"}`,
+  ].filter(Boolean).join("\n");
+
+  try {
+    await axios.post(
+      `https://api.telegram.org/bot${token}/sendMessage`,
+      { chat_id: chatId, text, parse_mode: "Markdown" },
+      { httpsAgent, timeout: 5000 }
+    );
+    logger.info("Admin Telegram notification sent", { orderRef });
+  } catch (e) {
+    logger.error("Admin Telegram notification failed", { error: e.message });
+  }
+}
+
+// ── Save order to database ─────────────────────────────────────────
+async function saveOrderToDb(orderRef, toolArgs, channel = "web") {
+  if (!hasDatabase()) return;
+  try {
+    await query(
+      `INSERT INTO orders (order_ref, customer_name, customer_email, shipping_address, order_items, order_total, discount_code, language, channel)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+       ON CONFLICT (order_ref) DO NOTHING`,
+      [
+        orderRef,
+        toolArgs.customer_name,
+        toolArgs.customer_email,
+        toolArgs.shipping_address,
+        JSON.stringify(toolArgs.order_items),
+        toolArgs.order_total,
+        toolArgs.discount_code || null,
+        toolArgs.language,
+        channel,
+      ]
+    );
+  } catch (e) {
+    logger.error("Failed to save order to DB", { error: e.message });
+  }
+}
+
+// ── Track abandoned purchase ───────────────────────────────────────
+async function upsertAbandonedPurchase(sessionId, email, name, cartData, step = 1) {
+  if (!hasDatabase()) return;
+  try {
+    await query(
+      `INSERT INTO abandoned_purchases (session_id, email, name, cart_data, step, updated_at)
+       VALUES ($1, $2, $3, $4, $5, NOW())
+       ON CONFLICT (session_id) DO UPDATE
+         SET email = $2, name = $3, cart_data = $4, step = $5, updated_at = NOW()`,
+      [sessionId, email, name, JSON.stringify(cartData), step]
+    );
+  } catch (e) {
+    logger.error("Failed to upsert abandoned purchase", { error: e.message });
+  }
+}
+
+export async function clearAbandonedPurchase(sessionId) {
+  if (!hasDatabase()) return;
+  try {
+    await query("DELETE FROM abandoned_purchases WHERE session_id = $1", [sessionId]);
+  } catch { /* ignore */ }
+}
+
+// ── Discount code validation ───────────────────────────────────────
 async function validateDiscount(code, orderTotal) {
   if (hasDatabase()) {
     const res = await query(
@@ -84,7 +165,6 @@ async function validateDiscount(code, orderTotal) {
     const amount = Math.round(orderTotal * dc.discount_percent) / 100;
     return { valid: true, code: dc.code, percent: dc.discount_percent, amount, newTotal: orderTotal - amount };
   }
-  // Fallback static codes for file-based mode
   const STATIC = { HIDOW10: 10, WELCOME15: 15, PAIN20: 20 };
   const pct = STATIC[code.toUpperCase()];
   if (!pct) return { valid: false };
@@ -92,7 +172,7 @@ async function validateDiscount(code, orderTotal) {
   return { valid: true, code: code.toUpperCase(), percent: pct, amount, newTotal: orderTotal - amount };
 }
 
-// ── Product comparison ────────────────────────────────────────────
+// ── Product comparison ─────────────────────────────────────────────
 function buildComparisonTable(nameA, nameB) {
   const find = (name) => allProducts.find(p =>
     p.name.toLowerCase().includes(name.toLowerCase()) ||
@@ -117,8 +197,18 @@ function buildComparisonTable(nameA, nameB) {
   return `${table}\n\nLinks: [${a.name}](${a.url}) · [${b.name}](${b.url})`;
 }
 
-// ── Tool executor ─────────────────────────────────────────────────
-async function executeTool(toolName, toolArgs, messages) {
+// ── Semantic product search ────────────────────────────────────────
+async function fetchRelevantProducts(userText) {
+  try {
+    const results = await semanticSearch(userText, 6);
+    return results; // null if no embeddings cache
+  } catch {
+    return null;
+  }
+}
+
+// ── Tool executor ──────────────────────────────────────────────────
+async function executeTool(toolName, toolArgs, messages, sessionId, channel = "web") {
   if (toolName === "send_order_confirmation") {
     if (!isValidEmail(toolArgs.customer_email)) {
       return { result: "Error: Invalid email. Ask the customer for a valid email.", emailSent: false };
@@ -126,11 +216,16 @@ async function executeTool(toolName, toolArgs, messages) {
     const orderRef = generateOrderRef();
     const res = await sendOrderConfirmationEmail({ ...toolArgs, orderRef });
     if (res.success) {
-      await trackEvent("order_completed", { sessionId: toolArgs.customer_email, language: toolArgs.language, orderRef });
-      await saveUserMemory(toolArgs.customer_email, {
-        name: toolArgs.customer_name, language: toolArgs.language, newSession: false,
-        purchase: { orderRef, items: toolArgs.order_items, total: toolArgs.order_total, date: new Date().toISOString() },
-      });
+      await Promise.all([
+        trackEvent("order_completed", { sessionId: toolArgs.customer_email, language: toolArgs.language, orderRef }),
+        saveUserMemory(toolArgs.customer_email, {
+          name: toolArgs.customer_name, language: toolArgs.language, newSession: false,
+          purchase: { orderRef, items: toolArgs.order_items, total: toolArgs.order_total, date: new Date().toISOString() },
+        }),
+        saveOrderToDb(orderRef, toolArgs, channel),
+        notifyAdminTelegram(orderRef, toolArgs),
+        clearAbandonedPurchase(sessionId),
+      ]);
       notifyCRM({ orderRef, ...toolArgs, timestamp: new Date().toISOString() });
     }
     return {
@@ -148,11 +243,14 @@ async function executeTool(toolName, toolArgs, messages) {
     }
     const res = await sendLeadCaptureEmail(toolArgs);
     if (res.success) {
-      await trackEvent("lead_captured", { email: toolArgs.email, interests: toolArgs.interests });
-      await saveUserMemory(toolArgs.email, {
-        name: toolArgs.name, language: toolArgs.language, newSession: true,
-        productsViewed: toolArgs.interests.split(",").map(s => s.trim()),
-      });
+      await Promise.all([
+        trackEvent("lead_captured", { email: toolArgs.email, interests: toolArgs.interests }),
+        saveUserMemory(toolArgs.email, {
+          name: toolArgs.name, language: toolArgs.language, newSession: true,
+          productsViewed: toolArgs.interests.split(",").map(s => s.trim()),
+        }),
+        upsertAbandonedPurchase(sessionId, toolArgs.email, toolArgs.name, [], 0),
+      ]);
     }
     return { result: res.success ? "Lead captured." : `Lead failed: ${res.error}`, emailSent: false };
   }
@@ -182,6 +280,27 @@ async function executeTool(toolName, toolArgs, messages) {
     };
   }
 
+  if (toolName === "check_order_status") {
+    const ref = (toolArgs.order_ref || "").toUpperCase();
+    if (!hasDatabase()) {
+      return { result: "Order tracking unavailable right now. Please call (314) 569-2888 with your order reference.", emailSent: false };
+    }
+    try {
+      const res = await query("SELECT * FROM orders WHERE order_ref = $1", [ref]);
+      if (!res.rows[0]) {
+        return { result: `No order found with reference ${ref}. Please verify the reference number or contact (314) 569-2888.`, emailSent: false };
+      }
+      const o = res.rows[0];
+      const created = new Date(o.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+      return {
+        result: `Order ${o.order_ref} — Status: ${o.status || "confirmed"}, Customer: ${o.customer_name}, Total: $${Number(o.order_total).toFixed(2)}, Placed: ${created}`,
+        emailSent: false,
+      };
+    } catch (e) {
+      return { result: `Could not retrieve order. Please call (314) 569-2888. Error: ${e.message}`, emailSent: false };
+    }
+  }
+
   return { result: "Unknown tool.", emailSent: false };
 }
 
@@ -194,17 +313,20 @@ export async function runAgent(sessionId, userText, channel = "web") {
 
   await trackEvent("message_sent", { sessionId, channel, language: lang });
 
-  // Auto-escalate frustrated users
   if (isFrustrated(messages)) {
     logger.info("Frustration detected, injecting escalation hint", { sessionId });
   }
 
-  const memCtx = await buildMemoryContext(sessionId);
+  const [memCtx, semanticProducts] = await Promise.all([
+    buildMemoryContext(sessionId),
+    fetchRelevantProducts(userText),
+  ]);
+
   const model = selectModel(userText, history);
 
   const response = await getClient().chat.completions.create({
     model,
-    messages: [{ role: "system", content: buildSystemPrompt(channel, context, memCtx) }, ...messages],
+    messages: [{ role: "system", content: buildSystemPrompt(channel, context, memCtx, semanticProducts) }, ...messages],
     tools, tool_choice: "auto", temperature: 0.4,
   });
 
@@ -212,11 +334,11 @@ export async function runAgent(sessionId, userText, channel = "web") {
 
   if (choice.finish_reason === "tool_calls") {
     const tc = choice.message.tool_calls[0];
-    const { result, emailSent, orderRef } = await executeTool(tc.function.name, JSON.parse(tc.function.arguments), messages);
+    const { result, emailSent, orderRef } = await executeTool(tc.function.name, JSON.parse(tc.function.arguments), messages, sessionId, channel);
     const withTool = [...messages, choice.message, { role: "tool", tool_call_id: tc.id, content: result }];
     const followUp = await getClient().chat.completions.create({
       model: MODEL_SMART,
-      messages: [{ role: "system", content: buildSystemPrompt(channel, context, memCtx) }, ...withTool],
+      messages: [{ role: "system", content: buildSystemPrompt(channel, context, memCtx, semanticProducts) }, ...withTool],
       temperature: 0.4,
     });
     const reply = followUp.choices[0].message.content || "";
@@ -240,13 +362,17 @@ export async function runAgentStream(sessionId, userText, channel, onChunk) {
 
   await trackEvent("message_sent", { sessionId, channel, language: lang });
 
-  const memCtx = await buildMemoryContext(sessionId);
+  const [memCtx, semanticProducts] = await Promise.all([
+    buildMemoryContext(sessionId),
+    fetchRelevantProducts(userText),
+  ]);
+
   const model = selectModel(userText, history);
   let fullReply = "", emailSent = false, orderRef = null;
   let toolCall = null, toolArgs = "", finishReason = null;
 
   const stream = await getClient().chat.completions.create({
-    model, messages: [{ role: "system", content: buildSystemPrompt(channel, context, memCtx) }, ...messages],
+    model, messages: [{ role: "system", content: buildSystemPrompt(channel, context, memCtx, semanticProducts) }, ...messages],
     tools, tool_choice: "auto", temperature: 0.4, stream: true,
   });
 
@@ -263,7 +389,7 @@ export async function runAgentStream(sessionId, userText, channel, onChunk) {
   }
 
   if (finishReason === "tool_calls" && toolCall) {
-    const res = await executeTool(toolCall.name, JSON.parse(toolArgs), messages);
+    const res = await executeTool(toolCall.name, JSON.parse(toolArgs), messages, sessionId, channel);
     emailSent = res.emailSent;
     orderRef = res.orderRef || null;
 
@@ -275,7 +401,7 @@ export async function runAgentStream(sessionId, userText, channel, onChunk) {
 
     const followUp = await getClient().chat.completions.create({
       model: MODEL_SMART,
-      messages: [{ role: "system", content: buildSystemPrompt(channel, context, memCtx) }, ...withTool],
+      messages: [{ role: "system", content: buildSystemPrompt(channel, context, memCtx, semanticProducts) }, ...withTool],
       temperature: 0.4, stream: true,
     });
 

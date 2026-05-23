@@ -1,6 +1,7 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 
-const STREAM_URL = (import.meta.env.VITE_API_URL || "") + "/api/chat/stream";
+const API_BASE = import.meta.env.VITE_API_URL || "";
+const STREAM_URL = API_BASE + "/api/chat/stream";
 const SESSION_KEY = "hidow_session_id";
 
 function getOrCreateSessionId() {
@@ -11,17 +12,40 @@ function getOrCreateSessionId() {
     localStorage.setItem(SESSION_KEY, id);
     return id;
   } catch {
-    return crypto.randomUUID(); // fallback if localStorage blocked
+    return crypto.randomUUID();
   }
 }
 
+function messagesKey(sid) { return `hidow_messages_${sid}`; }
+
+function loadSavedMessages(sid) {
+  try {
+    const raw = localStorage.getItem(messagesKey(sid));
+    if (!raw) return [];
+    return JSON.parse(raw).map(m => ({ ...m, streaming: false }));
+  } catch { return []; }
+}
+
+function saveMessages(sid, msgs) {
+  try {
+    const stable = msgs.filter(m => !m.streaming);
+    if (!stable.length) return;
+    localStorage.setItem(messagesKey(sid), JSON.stringify(stable));
+  } catch { /* ignore */ }
+}
+
 export function useChat() {
-  const [messages, setMessages] = useState([]);
+  const sessionId = useRef(getOrCreateSessionId());
+  const [messages, setMessages] = useState(() => loadSavedMessages(sessionId.current));
   const [isLoading, setIsLoading] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
   const [lastOrderRef, setLastOrderRef] = useState(null);
-  const sessionId = useRef(getOrCreateSessionId());
   const abortRef = useRef(null);
+
+  // Persist messages whenever they change
+  useEffect(() => {
+    saveMessages(sessionId.current, messages);
+  }, [messages]);
 
   const sendMessage = useCallback(async (userText) => {
     if (!userText?.trim() || isLoading) return;
@@ -108,16 +132,34 @@ export function useChat() {
     }
   }, [messages, isLoading]);
 
+  const submitFeedback = useCallback(async (messageIndex, rating) => {
+    try {
+      await fetch(API_BASE + "/api/feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sessionId: sessionId.current, messageIndex, rating }),
+      });
+    } catch { /* ignore */ }
+  }, []);
+
   const reset = useCallback(() => {
     abortRef.current?.abort();
     setMessages([]);
     setEmailSent(false);
     setLastOrderRef(null);
-    // New session on reset, but keep localStorage for returning user recognition
     const newId = crypto.randomUUID();
     sessionId.current = newId;
     try { localStorage.setItem(SESSION_KEY, newId); } catch { /* ignore */ }
   }, []);
 
-  return { messages, isLoading, emailSent, lastOrderRef, sendMessage, reset };
+  return {
+    messages,
+    isLoading,
+    emailSent,
+    lastOrderRef,
+    sendMessage,
+    submitFeedback,
+    reset,
+    sessionId: sessionId.current,
+  };
 }
