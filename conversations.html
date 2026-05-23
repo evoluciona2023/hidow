@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>HiDow — Live Conversations</title>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#f0f2f5;padding:24px 16px;color:#1a1a2e}
+    h1{font-size:22px;margin-bottom:4px}
+    .subtitle{font-size:13px;color:#888;margin-bottom:24px}
+    .nav{font-size:12px;margin-bottom:20px}
+    .nav a{color:#2563eb;text-decoration:none;margin-right:16px}
+    .stats{display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap}
+    .stat{background:white;border-radius:10px;padding:14px 20px;min-width:120px;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+    .stat-val{font-size:28px;font-weight:700;color:#1a1a2e}
+    .stat-label{font-size:11px;color:#888;margin-top:2px}
+    .conversations{display:flex;flex-direction:column;gap:10px;max-width:900px}
+    .card{background:white;border-radius:10px;padding:16px 20px;box-shadow:0 1px 4px rgba(0,0,0,.08);cursor:pointer;transition:box-shadow .15s}
+    .card:hover{box-shadow:0 4px 12px rgba(0,0,0,.12)}
+    .card-header{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+    .badge{font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;text-transform:uppercase}
+    .badge-web{background:#dbeafe;color:#1d4ed8}
+    .badge-telegram{background:#e0f2fe;color:#0369a1}
+    .badge-whatsapp{background:#dcfce7;color:#166534}
+    .badge-sms{background:#fef3c7;color:#92400e}
+    .session-id{font-size:11px;color:#888;font-family:monospace}
+    .last-msg{font-size:13px;color:#444;line-height:1.4;background:#f8f9fa;border-radius:6px;padding:8px 10px;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .meta{font-size:11px;color:#aaa;margin-top:6px;display:flex;gap:16px}
+    .empty{text-align:center;padding:48px;color:#aaa;font-size:15px}
+    .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;padding:24px;overflow-y:auto}
+    .modal.open{display:flex;align-items:flex-start;justify-content:center}
+    .modal-box{background:white;border-radius:12px;max-width:680px;width:100%;padding:24px;max-height:80vh;display:flex;flex-direction:column}
+    .modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+    .modal-title{font-size:16px;font-weight:600}
+    .close-btn{background:none;border:none;font-size:20px;cursor:pointer;color:#888}
+    .messages{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:10px}
+    .msg{padding:10px 14px;border-radius:10px;font-size:13px;line-height:1.5;max-width:85%}
+    .msg-user{background:#2563eb;color:white;align-self:flex-end;border-bottom-right-radius:3px}
+    .msg-assistant{background:#f0f2f5;color:#1a1a2e;align-self:flex-start;border-bottom-left-radius:3px}
+    .msg-time{font-size:10px;opacity:.6;margin-top:2px}
+    .refresh-btn{background:#2563eb;color:white;border:none;border-radius:8px;padding:8px 16px;font-size:13px;cursor:pointer;margin-left:auto;display:block;margin-bottom:16px}
+  </style>
+</head>
+<body>
+  <div class="nav">
+    <a href="test.html">Chat</a>
+    <a href="analytics.html">Analytics</a>
+    <a href="conversations.html">Conversations</a>
+  </div>
+  <h1>Live Conversations</h1>
+  <p class="subtitle" id="subtitle">Loading...</p>
+
+  <div class="stats">
+    <div class="stat"><div class="stat-val" id="stat-total">—</div><div class="stat-label">Active (1h)</div></div>
+    <div class="stat"><div class="stat-val" id="stat-web">—</div><div class="stat-label">Web</div></div>
+    <div class="stat"><div class="stat-val" id="stat-telegram">—</div><div class="stat-label">Telegram</div></div>
+    <div class="stat"><div class="stat-val" id="stat-whatsapp">—</div><div class="stat-label">WhatsApp</div></div>
+    <div class="stat"><div class="stat-val" id="stat-sms">—</div><div class="stat-label">SMS</div></div>
+  </div>
+
+  <button class="refresh-btn" onclick="load()">Refresh</button>
+  <div class="conversations" id="list"></div>
+
+  <!-- Detail modal -->
+  <div class="modal" id="modal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <span class="modal-title" id="modal-title">Conversation</span>
+        <button class="close-btn" onclick="closeModal()">✕</button>
+      </div>
+      <div class="messages" id="modal-messages"></div>
+    </div>
+  </div>
+
+  <script>
+    let allConversations = [];
+
+    async function load() {
+      try {
+        const r = await fetch("/api/conversations");
+        const data = await r.json();
+        allConversations = data.conversations || [];
+        render(allConversations);
+      } catch (e) {
+        document.getElementById("list").innerHTML = '<div class="empty">Could not load conversations.</div>';
+      }
+    }
+
+    function render(convs) {
+      const now = new Date();
+      document.getElementById("subtitle").textContent =
+        `Last updated: ${now.toLocaleTimeString()} · Auto-refreshes every 30s`;
+
+      const channels = { web: 0, telegram: 0, whatsapp: 0, sms: 0 };
+      convs.forEach(c => { channels[c.channel] = (channels[c.channel] || 0) + 1; });
+      document.getElementById("stat-total").textContent = convs.length;
+      document.getElementById("stat-web").textContent = channels.web;
+      document.getElementById("stat-telegram").textContent = channels.telegram;
+      document.getElementById("stat-whatsapp").textContent = channels.whatsapp;
+      document.getElementById("stat-sms").textContent = channels.sms;
+
+      if (!convs.length) {
+        document.getElementById("list").innerHTML = '<div class="empty">No active conversations in the last hour.</div>';
+        return;
+      }
+
+      document.getElementById("list").innerHTML = convs.map((c, i) => `
+        <div class="card" onclick="openModal(${i})">
+          <div class="card-header">
+            <span class="badge badge-${c.channel}">${c.channel}</span>
+            <span class="session-id">${c.sessionId}</span>
+          </div>
+          <div class="last-msg">${escHtml(c.lastMessage || "(no messages)")}</div>
+          <div class="meta">
+            <span>${c.messageCount} messages</span>
+            <span>${timeAgo(c.updatedAt)}</span>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function openModal(idx) {
+      const c = allConversations[idx];
+      document.getElementById("modal-title").textContent = `${c.channel.toUpperCase()} · ${c.sessionId}`;
+      const msgs = (c.messages || []).map(m => `
+        <div>
+          <div class="msg msg-${m.role}">${escHtml(typeof m.content === "string" ? m.content : "(tool call)")}</div>
+        </div>
+      `).join("");
+      document.getElementById("modal-messages").innerHTML = msgs || '<p style="color:#aaa;text-align:center">No messages</p>';
+      document.getElementById("modal").classList.add("open");
+      setTimeout(() => document.getElementById("modal-messages").scrollTop = 99999, 50);
+    }
+
+    function closeModal() { document.getElementById("modal").classList.remove("open"); }
+    document.getElementById("modal").addEventListener("click", e => { if (e.target === e.currentTarget) closeModal(); });
+
+    function escHtml(s) { return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+    function timeAgo(ts) {
+      const diff = Date.now() - new Date(ts).getTime();
+      const m = Math.floor(diff / 60000);
+      if (m < 1) return "just now";
+      if (m < 60) return `${m}m ago`;
+      return `${Math.floor(m/60)}h ago`;
+    }
+
+    load();
+    setInterval(load, 30000);
+  </script>
+</body>
+</html>

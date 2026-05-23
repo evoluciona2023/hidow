@@ -25,8 +25,10 @@ export const tools = [
               required: ["product_name", "price", "quantity"],
             },
           },
-          order_total: { type: "number" },
-          language:    { type: "string", enum: ["en", "es"] },
+          order_total:    { type: "number" },
+          discount_code:  { type: "string", description: "Applied discount code if any" },
+          discount_amount:{ type: "number", description: "Dollar amount discounted" },
+          language:       { type: "string", enum: ["en", "es"] },
         },
         required: ["customer_name", "customer_email", "shipping_address", "order_items", "order_total", "language"],
       },
@@ -38,15 +40,15 @@ export const tools = [
       name: "capture_lead",
       description:
         "Captures a potential customer's email when they show interest but are not ready to buy. " +
-        "Use after 3+ exchanges where the user has asked about products but hasn't started a purchase. " +
+        "Use after 3+ exchanges where the user asked about products but hasn't started a purchase. " +
         "Offer to send them information first — only call if they agree.",
       parameters: {
         type: "object",
         properties: {
-          name:      { type: "string",  description: "Customer name if known, else 'Unknown'" },
-          email:     { type: "string",  description: "Customer email address" },
-          interests: { type: "string",  description: "Products or conditions they asked about" },
-          language:  { type: "string",  enum: ["en", "es"] },
+          name:      { type: "string" },
+          email:     { type: "string" },
+          interests: { type: "string" },
+          language:  { type: "string", enum: ["en", "es"] },
         },
         required: ["name", "email", "interests", "language"],
       },
@@ -59,7 +61,7 @@ export const tools = [
       description:
         "Transfer the user to a human HiDow representative. " +
         "Use when: the user explicitly asks for a human, you cannot resolve the issue after 2 attempts, " +
-        "or the question involves custom pricing, bulk orders, or medical advice.",
+        "the user seems frustrated, or the question involves custom pricing, bulk orders, or medical advice.",
       parameters: {
         type: "object",
         properties: {
@@ -68,6 +70,40 @@ export const tools = [
           user_language:        { type: "string", enum: ["en", "es"] },
         },
         required: ["reason", "conversation_summary", "user_language"],
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "compare_products",
+      description:
+        "Generate a side-by-side comparison table of two HiDow products. " +
+        "Use when the user asks 'which is better', 'what's the difference', or 'compare X vs Y'.",
+      parameters: {
+        type: "object",
+        properties: {
+          product_a: { type: "string", description: "First product name or ID" },
+          product_b: { type: "string", description: "Second product name or ID" },
+        },
+        required: ["product_a", "product_b"],
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "apply_discount_code",
+      description:
+        "Validate and apply a discount code to the current order. " +
+        "Call when the user provides a promo or discount code.",
+      parameters: {
+        type: "object",
+        properties: {
+          code:        { type: "string", description: "The discount code provided by the user" },
+          order_total: { type: "number", description: "Current order total before discount" },
+        },
+        required: ["code", "order_total"],
       },
     },
   },

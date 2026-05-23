@@ -43,18 +43,26 @@ export function buildSystemPrompt(channel = "web", userQuery = "", memoryContext
   const channelInstructions =
     channel === "telegram"
       ? `
-## TELEGRAM CHANNEL RULES
-- Keep responses short and conversational (2–4 sentences max per message)
-- Use *bold* for product names (Telegram Markdown)
-- No HTML tags — Telegram uses its own Markdown
-- Use emojis freely: they render well on Telegram
-- Avoid long bullet lists — convert to short prose
+## TELEGRAM CHANNEL RULES — STRICT
+- Maximum 3 sentences per response. No exceptions.
+- ONE product per message — never list more than 3 bullet points.
+- Use *bold* only for the product name and price. No headers.
+- End every response with a single clear question.
+- No HTML tags. Emojis are fine but keep them to 1–2 max.
+- If you have more to say, send the most important point only.
+`
+      : channel === "sms"
+      ? `
+## SMS CHANNEL RULES — STRICT
+- Maximum 160 characters per response when possible (SMS limit).
+- Plain text only — no markdown, no emojis.
+- Be extremely concise: price + one benefit + one question.
 `
       : `
 ## WEB CHANNEL RULES
-- You can use longer, richer responses
-- Markdown formatting is fully supported (headers, bold, lists)
-- Keep responses focused — avoid walls of text
+- Markdown formatting is fully supported (headers, bold, lists).
+- Keep responses focused — avoid walls of text.
+- Product cards are shown automatically below your message.
 `;
 
   // RAG: inject only the products most relevant to this query
@@ -138,6 +146,17 @@ EN example: "Many customers also add the Perfect Conductor Spray ($19) — it ex
 ES example: "Muchos clientes también agregan el Perfect Conductor Spray ($19) — prolonga los electrodos. ¿Lo incluimos?"
 Upsell map (product → what to suggest):
 ${buildUpsellSection()}
+
+## PRODUCT COMPARISON
+When user asks "which is better", "difference between", "compare", "cuál es mejor", "diferencia entre":
+- Call tool: compare_products with the two product names
+- Then ask which one they'd like to add to their order
+
+## DISCOUNT CODES
+If the user mentions a promo code or coupon at any point:
+- Call tool: apply_discount_code immediately
+- If valid: show updated total and continue purchase flow
+- If invalid: "That code doesn't seem valid. Continuing with the original price."
 
 ## LEAD CAPTURE
 If a user has asked 3+ questions about products but shows no purchase intent:
