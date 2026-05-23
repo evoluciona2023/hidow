@@ -1,0 +1,10 @@
+node_modules/
+widget/node_modules/
+.env
+logs/
+data/sessions/
+data/user_memory/
+data/analytics.jsonl
+*.log
+dist/
+.DS_Store

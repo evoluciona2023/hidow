@@ -1,0 +1,563 @@
+{
+  "products": [
+    {
+      "id": "hidow-spot",
+      "name": "HiDow Spot",
+      "category": "wireless",
+      "categoryLabel": "Wireless TENS/EMS Devices",
+      "price": 119,
+      "priceDisplay": "$119",
+      "url": "https://www.hidow.com/shop/hidow-spot/",
+      "description": "Relief made easy with the HiDow SPOT, our first-gen wireless TENS/EMS device. With 4 modes, 20 intensity levels, and a compact design, it’s built for relaxation, recovery, and relief anytime, anywhere.",
+      "image": "https://www.hidow.com/wp-content/uploads/2020/01/spot-box-simul.jpg",
+      "badge": null,
+      "pain_areas": [
+        "back",
+        "neck",
+        "shoulders",
+        "arms",
+        "legs",
+        "full body"
+      ]
+    },
+    {
+      "id": "wireless-4-9",
+      "name": "Wireless 4-9",
+      "category": "wireless",
+      "categoryLabel": "Wireless TENS/EMS Devices",
+      "price": 599,
+      "priceDisplay": "$599",
+      "url": "https://www.hidow.com/shop/wireless-4-9/",
+      "description": "In the Goldilocks Zone: Not as basic as the SPOT, and not as advanced as the Pro Touch—meet the Wireless 4-9, our second-gen wireless TENS/EMS device built for multi-area relief with 9 modes, 20 intensity levels, and independent controls.",
+      "image": "https://www.hidow.com/wp-content/uploads/2016/07/Hidow-Wireless-4-9-Remote-and-Receivers-1.jpg",
+      "badge": null,
+      "pain_areas": [
+        "back",
+        "neck",
+        "shoulders",
+        "arms",
+        "legs",
+        "full body"
+      ]
+    },
+    {
+      "id": "pro-touch-6-12",
+      "name": "Pro Touch 6-12",
+      "category": "wireless",
+      "categoryLabel": "Wireless TENS/EMS Devices",
+      "price": 999,
+      "priceDisplay": "$999",
+      "url": "https://www.hidow.com/shop/pro-touch/",
+      "description": "Say hello to the HiDow Pro Touch 6-12—the most advanced TENS/EMS device in the HiDow lineup. With a sleek touchscreen, support for up to 6 wireless receivers, 12 therapeutic modes, and 20 intensity levels, it delivers customizable, pro-grade therapy for targeted relief and recovery. Wireless and lightweight, it’s relief designed to move with you.",
+      "image": "https://www.hidow.com/wp-content/uploads/2018/08/ProTouch6-12-1.jpg",
+      "badge": "best-seller",
+      "pain_areas": [
+        "back",
+        "neck",
+        "shoulders",
+        "arms",
+        "legs",
+        "full body"
+      ]
+    },
+    {
+      "id": "wireless-receiver",
+      "name": "Universal Wireless Receiver",
+      "category": "wireless",
+      "categoryLabel": "Wireless TENS/EMS Devices",
+      "price": 99,
+      "priceDisplay": "$99",
+      "url": "https://www.hidow.com/shop/wireless-receiver/",
+      "description": "Supercharge your Pro Touch 6-12 or Wireless 4-9 with the Universal Wireless Receiver. Add extra channels for more powerful, targeted pain relief, muscle stimulation, and expanded coverage.",
+      "image": "https://www.hidow.com/wp-content/uploads/2024/09/HiDow-Universal-Receiver-Box.jpg",
+      "badge": null,
+      "pain_areas": [
+        "back",
+        "neck",
+        "shoulders",
+        "arms",
+        "legs",
+        "full body"
+      ]
+    },
+    {
+      "id": "xp-micro",
+      "name": "XP Micro",
+      "category": "wired",
+      "categoryLabel": "Wired TENS/EMS Devices",
+      "price": 299,
+      "priceDisplay": "$299",
+      "url": "https://www.hidow.com/shop/acu-xp-micro/",
+      "description": "Small, but mighty. The XP Micro packs big relief with dual output channels, 8 modes, and total control—all in a sleek, compact design that fits in your pocket.",
+      "image": "https://www.hidow.com/wp-content/uploads/2015/06/XP-Micro-Device.jpg",
+      "badge": null,
+      "pain_areas": [
+        "back",
+        "neck",
+        "shoulders",
+        "arms",
+        "legs",
+        "full body"
+      ]
+    },
+    {
+      "id": "xpd-12",
+      "name": "XPD 12",
+      "category": "wired",
+      "categoryLabel": "Wired TENS/EMS Devices",
+      "price": 399,
+      "priceDisplay": "$399",
+      "url": "https://www.hidow.com/shop/xpd-12/",
+      "description": "The most loved in our wired lineup for a reason. XPD 12 delivers serious relief with 12 modes, 20 intensity levels, and dual ports—each with independent intensity control—all in a streamlined design that keeps your sessions simple and your focus where it counts.",
+      "image": "https://www.hidow.com/wp-content/uploads/2014/06/xpd12-blk-w-pads.jpg",
+      "badge": null,
+      "pain_areas": [
+        "back",
+        "neck",
+        "shoulders",
+        "arms",
+        "legs",
+        "full body"
+      ]
+    },
+    {
+      "id": "xpds-18",
+      "name": "XPDS 18",
+      "category": "wired",
+      "categoryLabel": "Wired TENS/EMS Devices",
+      "price": 499,
+      "priceDisplay": "$499",
+      "url": "https://www.hidow.com/shop/xpds-18/",
+      "description": "Smart, simple, and seriously effective. The XPDS 18 takes your recovery to the next level with 18 therapeutic modes (hello, microcurrent and trigger point), dual ports for multi-zone relief, and 20 intensity levels. Dependable wired power with a 10+ hour battery life make it the perfect mid-tier device for versatile, effective recovery.",
+      "image": "https://www.hidow.com/wp-content/uploads/2018/04/Hidow-XPDS-18-Device-and-Pads-1.jpg",
+      "badge": null,
+      "pain_areas": [
+        "back",
+        "neck",
+        "shoulders",
+        "arms",
+        "legs",
+        "full body"
+      ]
+    },
+    {
+      "id": "xpds-4-24",
+      "name": "XPDS 4-24",
+      "category": "wired",
+      "categoryLabel": "Wired TENS/EMS Devices",
+      "price": 649,
+      "priceDisplay": "$649",
+      "url": "https://www.hidow.com/shop/xpds-4-24/",
+      "description": "24 modes, quad-port flexibility, one powerful device. The XPDS 4|24 offers complete control for personalized recovery, all in a sleek, durable design built to perform.",
+      "image": "https://www.hidow.com/wp-content/uploads/2019/03/XPDS424-Device-2.jpg",
+      "badge": null,
+      "pain_areas": [
+        "back",
+        "neck",
+        "shoulders",
+        "arms",
+        "legs",
+        "full body"
+      ]
+    },
+    {
+      "id": "ocuwave",
+      "name": "OcuWave Eye Massager",
+      "category": "vibration",
+      "categoryLabel": "Vibration Therapy",
+      "price": 199,
+      "priceDisplay": "$199–$249",
+      "url": "https://www.hidow.com/shop/ocuwave-eye-massager/",
+      "description": "Relief for tired, strained eyes. OcuWave combines rhythmic wave massage, soothing heat, vibration, and bone conduction sound therapy to ease tension, reduce puffiness and dark circles, and help you unwind.",
+      "image": "https://www.hidow.com/wp-content/uploads/2025/10/OcuWave-8.jpg",
+      "badge": null,
+      "pain_areas": [
+        "eyes",
+        "muscles",
+        "joints"
+      ]
+    },
+    {
+      "id": "hd-mini2",
+      "name": "HD Mini2 Massage Gun",
+      "category": "percussion",
+      "categoryLabel": "Percussion & Compression",
+      "price": 299,
+      "priceDisplay": "$299",
+      "url": "https://www.hidow.com/shop/hd-mini2/",
+      "description": "Compact power with a polished edge. The HD Mini2 delivers deep, steady percussion through a sleek aluminum frame that feels as strong as it looks.",
+      "image": "https://www.hidow.com/wp-content/uploads/2022/12/Mini2-6.jpg",
+      "badge": null,
+      "pain_areas": [
+        "muscles",
+        "back",
+        "legs",
+        "arms",
+        "recovery"
+      ]
+    },
+    {
+      "id": "m3-mini3",
+      "name": "M3 Mini3 Massage Gun",
+      "category": "percussion",
+      "categoryLabel": "Percussion & Compression",
+      "price": 229,
+      "priceDisplay": "$229",
+      "url": "https://www.hidow.com/shop/m3-mini-gun/",
+      "description": "Feather-light, ultra-smooth, and surprisingly strong. The M3 Mini3 packs pro-level percussion into a design that feels effortless in hand and easy on everything else.",
+      "image": "https://www.hidow.com/wp-content/uploads/2022/12/Mini3-5.jpg",
+      "badge": null,
+      "pain_areas": [
+        "muscles",
+        "back",
+        "legs",
+        "arms",
+        "recovery"
+      ]
+    },
+    {
+      "id": "thermoair-wave",
+      "name": "ThermoAir Wave Compression 2.0",
+      "category": "percussion",
+      "categoryLabel": "Percussion & Compression",
+      "price": 35,
+      "priceDisplay": "$35–$479",
+      "url": "https://www.hidow.com/shop/thermoair-wave-compression-wraps/",
+      "description": "ThermoAir Wave, redesigned.\nVersion 2.0 brings stronger compression, deeper heat, and quieter sessions to wireless wraps designed to support circulation and help tired calves, quads, and arms recover after long days on your feet, workouts, or travel. Now in an all-black design.",
+      "image": "https://www.hidow.com/wp-content/uploads/2023/04/new-thermo-both-wraps-1.jpg",
+      "badge": null,
+      "pain_areas": [
+        "muscles",
+        "back",
+        "legs",
+        "arms",
+        "recovery"
+      ]
+    },
+    {
+      "id": "power-duo",
+      "name": "Power Duo",
+      "category": "percussion",
+      "categoryLabel": "Percussion & Compression",
+      "price": 454,
+      "priceDisplay": "$454",
+      "url": "https://www.hidow.com/shop/power-duo/",
+      "description": "Double-head percussion meets total recovery. The Power Duo delivers deeper, more even muscle relief with dual percussion heads, three speeds, and four interchangeable attachments. Added soft fur cover for gentle, spa-like recovery. Perfect for warm-ups, cooldowns, and everyday tension relief.",
+      "image": "https://www.hidow.com/wp-content/uploads/2024/10/PowerDuo-Hidow-01.jpg",
+      "badge": null,
+      "pain_areas": [
+        "muscles",
+        "back",
+        "legs",
+        "arms",
+        "recovery"
+      ]
+    },
+    {
+      "id": "acugloves",
+      "name": "AcuGloves",
+      "category": "wraps",
+      "categoryLabel": "Electrotherapy Wraps",
+      "price": 79,
+      "priceDisplay": "$79–$159",
+      "url": "https://www.hidow.com/shop/acugloves/",
+      "description": "Discover the next generation of hand therapy with AcuGloves—crafted for optimal relief and mobility. These gloves provide 360-degree TENS/EMS electrotherapy from your fingertips to your wrists, alleviating arthritis and carpal tunnel syndrome with universal device compatibility. Infused with silver for added antimicrobial benefits, AcuGloves enhance mobility and dexterity for your hands, so you ca",
+      "image": "https://www.hidow.com/wp-content/uploads/2015/06/Product-Images-1000-x-1000-4.jpg",
+      "badge": null,
+      "pain_areas": [
+        "hands",
+        "wrists",
+        "elbows",
+        "feet"
+      ]
+    },
+    {
+      "id": "acuwrist-wrap",
+      "name": "AcuWrist Wrap",
+      "category": "wraps",
+      "categoryLabel": "Electrotherapy Wraps",
+      "price": 39,
+      "priceDisplay": "$39–$119",
+      "url": "https://www.hidow.com/shop/acuwrist-wrap/",
+      "description": "Wave goodbye to wrist discomfort with the HiDow AcuWrist Wrap. Lightweight, breathable, and designed for precision therapy, it’s your perfect companion for easing tension, boosting mobility, and enjoying everyday activities pain-free.",
+      "image": "https://www.hidow.com/wp-content/uploads/2016/07/HiDow-AcuWrist-Wrap-1.jpg",
+      "badge": null,
+      "pain_areas": [
+        "hands",
+        "wrists",
+        "elbows",
+        "feet"
+      ]
+    },
+    {
+      "id": "acuelbow-wrap",
+      "name": "AcuElbow Wrap",
+      "category": "wraps",
+      "categoryLabel": "Electrotherapy Wraps",
+      "price": 49,
+      "priceDisplay": "$49–$129",
+      "url": "https://www.hidow.com/shop/acuelbow-wrap/",
+      "description": "Introducing the AcuElbow Wrap for precision therapy and improved elbow health. Light as a feather and designed for precision, this wrap turns elbow care into an art form, helping you move freely and live boldly.",
+      "image": "https://www.hidow.com/wp-content/uploads/2016/07/AcuElbow-1.jpg",
+      "badge": null,
+      "pain_areas": [
+        "hands",
+        "wrists",
+        "elbows",
+        "feet"
+      ]
+    },
+    {
+      "id": "acuslippers",
+      "name": "AcuSlippers",
+      "category": "wraps",
+      "categoryLabel": "Electrotherapy Wraps",
+      "price": 49,
+      "priceDisplay": "$49–$129",
+      "url": "https://www.hidow.com/shop/electrotherapy-slippers/",
+      "description": "Step into relaxation with HiDow AcuSlippers. Combining advanced electrotherapy and reflexology, these slippers boost circulation, speed up recovery, and offer unmatched comfort. One size fits most.",
+      "image": "https://www.hidow.com/wp-content/uploads/2014/06/AcuSlippers-Both.jpg",
+      "badge": null,
+      "pain_areas": [
+        "hands",
+        "wrists",
+        "elbows",
+        "feet"
+      ]
+    },
+    {
+      "id": "revive-head-wrap",
+      "name": "Revive Head Wrap & Eye Mask",
+      "category": "heat",
+      "categoryLabel": "Heat & Light Therapy",
+      "price": 59,
+      "priceDisplay": "$59",
+      "url": "https://www.hidow.com/shop/revive-head-wrap-eye-mask/",
+      "description": "For when everything feels loud.\nOur new Head Wrap + Eye Mask brings cooling or warmth, gentle pressure, and total calm, on its own or layered with OcuWave. Built for migraine relief, sinus pressure, and screen fatigue, it combines temperature therapy and light compression for the kind of full-body reset you feel instantly.",
+      "image": "https://www.hidow.com/wp-content/uploads/2025/11/Revive-KeyFeatures-HeadEye.jpg",
+      "badge": null,
+      "pain_areas": [
+        "head",
+        "eyes",
+        "joints",
+        "muscles"
+      ]
+    },
+    {
+      "id": "revive-gel-sleeve",
+      "name": "Revive Hot & Cold Gel Sleeve",
+      "category": "heat",
+      "categoryLabel": "Heat & Light Therapy",
+      "price": 39,
+      "priceDisplay": "$39–$124",
+      "url": "https://www.hidow.com/shop/revive-hot-cold-gel-sleeve/",
+      "description": "The stretch-fit Lycra exterior moves with your body while the dense gel core maintains even temperature across every contour. It’s soft, structured, and just the right amount of weighted, grounding enough to stay in place and light enough to move freely. Each size is shaped to target specific zones: S/M for arms and calves, L for knees, and XL for legs or larger muscle groups. Use it before traini",
+      "image": "https://www.hidow.com/wp-content/uploads/2025/11/Revive-KeyFeatures-Sleeve.jpg",
+      "badge": null,
+      "pain_areas": [
+        "head",
+        "eyes",
+        "joints",
+        "muscles"
+      ]
+    },
+    {
+      "id": "hd-glo",
+      "name": "HD Glo Red Light Therapy Torch",
+      "category": "heat",
+      "categoryLabel": "Heat & Light Therapy",
+      "price": 249,
+      "priceDisplay": "$249",
+      "url": "https://www.hidow.com/shop/hd-glo-red-light-therapy-torch/",
+      "description": "HiDow-inspired design meets multi-light power for a holistic wellness boost.",
+      "image": "https://www.hidow.com/wp-content/uploads/2023/11/HD-GLO-1.jpg",
+      "badge": null,
+      "pain_areas": [
+        "head",
+        "eyes",
+        "joints",
+        "muscles"
+      ]
+    },
+    {
+      "id": "hot-cold-packs",
+      "name": "Hot & Cold Therapy Packs",
+      "category": "heat",
+      "categoryLabel": "Heat & Light Therapy",
+      "price": 12,
+      "priceDisplay": "$12–$29",
+      "url": "https://www.hidow.com/shop/hot-cold-therapy-packs-2-pack/",
+      "description": "Reusable hot and cold gel packs for simple, steady temperature therapy. Flexible from freezer or microwave, they contour to the area you’re targeting and give even relief without the usual mess.",
+      "image": "https://www.hidow.com/wp-content/uploads/2025/11/HotCold-Pack-Front-Back-1.jpg",
+      "badge": null,
+      "pain_areas": [
+        "head",
+        "eyes",
+        "joints",
+        "muscles"
+      ]
+    },
+    {
+      "id": "hd-vibe",
+      "name": "HD Vibe Roller",
+      "category": "vibration",
+      "categoryLabel": "Vibration Therapy",
+      "price": 99,
+      "priceDisplay": "$99",
+      "url": "https://www.hidow.com/shop/hd-vibe-roller/",
+      "description": "Textured for impact, powered by vibration for deeper recovery. The HD Vibe is your next-gen foam roller, with five vibration intensity levels to target tension, improve flexibility, and boost recovery.",
+      "image": "https://www.hidow.com/wp-content/uploads/2024/11/486.jpg",
+      "badge": null,
+      "pain_areas": [
+        "eyes",
+        "muscles",
+        "joints"
+      ]
+    },
+    {
+      "id": "triggerflex",
+      "name": "TriggerFlex 2.0",
+      "category": "vibration",
+      "categoryLabel": "Vibration Therapy",
+      "price": 50,
+      "priceDisplay": "$50",
+      "url": "https://www.hidow.com/shop/triggerflex-2-0/",
+      "description": "Say hello to TriggerFlex 2.0. Precision acupoint pressure works into deep tissue while heat and vibration ease the surrounding muscle. Attaches to any smooth surface for hands-free relief. Powerful recovery in something small enough to live in your bag.",
+      "image": "https://www.hidow.com/wp-content/uploads/2024/10/TriggerFlex-2.0-Main.jpg",
+      "badge": null,
+      "pain_areas": [
+        "eyes",
+        "muscles",
+        "joints"
+      ]
+    },
+    {
+      "id": "perfect-conductor",
+      "name": "Perfect Conductor Spray",
+      "category": "accessories",
+      "categoryLabel": "Accessories & Sprays",
+      "price": 19,
+      "priceDisplay": "$19",
+      "url": "https://www.hidow.com/shop/perfect-conductor/",
+      "description": "Power up every session. HiDow’s Perfect Conductor Spray boosts conductivity, extends pad life, and delivers smoother, more effective therapy.",
+      "image": "https://www.hidow.com/wp-content/uploads/2014/06/perfect-conductor-spray-main-1.jpg",
+      "badge": "best-seller",
+      "pain_areas": [
+        "general"
+      ]
+    },
+    {
+      "id": "magnesium-spray",
+      "name": "Magnesium Spray",
+      "category": "accessories",
+      "categoryLabel": "Accessories & Sprays",
+      "price": 19,
+      "priceDisplay": "$19",
+      "url": "https://www.hidow.com/shop/magnesium-spray/",
+      "description": "A new kind of conductivity. Our Magnesium Spray uses a blend of functional actives and calming botanicals to create smoother, calmer, more balanced sessions. Think of it as recovery support with skincare standards.",
+      "image": "https://www.hidow.com/wp-content/uploads/2025/11/Magnesium-Spray-Front.jpg",
+      "badge": null,
+      "pain_areas": [
+        "general"
+      ]
+    },
+    {
+      "id": "cervical-pads",
+      "name": "Cervical Pads",
+      "category": "pads",
+      "categoryLabel": "Electrode Pads",
+      "price": 25,
+      "priceDisplay": "$25–$40",
+      "url": "https://www.hidow.com/shop/cervical-pads/",
+      "description": "Shaped for the natural curve of the neck, our Cervical Pads focus stimulation on the muscles that rarely get proper attention. The contour, sizing, and contact layout combine for a steadier, more intentional release.",
+      "image": "https://www.hidow.com/wp-content/uploads/2025/12/Cervical-Pad-Front.jpg",
+      "badge": null,
+      "pain_areas": [
+        "neck",
+        "back",
+        "joints"
+      ]
+    },
+    {
+      "id": "dualpoint-pads",
+      "name": "DualPoint Gel Pads",
+      "category": "pads",
+      "categoryLabel": "Electrode Pads",
+      "price": 15,
+      "priceDisplay": "$15–$50",
+      "url": "https://www.hidow.com/shop/dualpoint-gel-pads/",
+      "description": "DualPoint Pads are the first mid-size pads designed to work on their own. Two snaps. Smooth coverage. Built for shoulders, hips, quads, and calves.",
+      "image": "https://www.hidow.com/wp-content/uploads/2025/09/DualPointPads-3-Sizes.jpg",
+      "badge": null,
+      "pain_areas": [
+        "neck",
+        "back",
+        "joints"
+      ]
+    },
+    {
+      "id": "magnapads",
+      "name": "MagnaPads",
+      "category": "pads",
+      "categoryLabel": "Electrode Pads",
+      "price": 35,
+      "priceDisplay": "$35–$100",
+      "url": "https://www.hidow.com/shop/magna-pads/",
+      "description": "MagnaPads bring a new kind of simplicity to wired recovery. Designed for use with the MagnaWire, the guided magnetic connection clicks into place with a smooth pull and stays secure once it’s there. No snaps to press, no alignment to fumble. Just a cleaner, easier way to connect. Each pad is finished in soft, flexible faux leather for lasting comfort and a smooth feel against the skin.",
+      "image": "https://www.hidow.com/wp-content/uploads/2025/09/All-3-MagnaPads-1.jpg",
+      "badge": null,
+      "pain_areas": [
+        "neck",
+        "back",
+        "joints"
+      ]
+    },
+    {
+      "id": "heated-electrode-pad",
+      "name": "Heated Electrode Pad Set",
+      "category": "pads",
+      "categoryLabel": "Electrode Pads",
+      "price": 59,
+      "priceDisplay": "$59–$99",
+      "url": "https://www.hidow.com/shop/heated-electrode-pad-set/",
+      "description": "Turn up the heat on your TENS/EMS therapy. Heat enhances circulation, relaxes muscles, and boosts relief—all while targeting pain with precision. Compatible with all HiDow devices, it delivers up to 2 hours of soothing heat in one seamless session.",
+      "image": "https://www.hidow.com/wp-content/uploads/2022/06/Heated-Electrode-Pad-1.jpg",
+      "badge": null,
+      "pain_areas": [
+        "neck",
+        "back",
+        "joints"
+      ]
+    },
+    {
+      "id": "tactical-carry-bag",
+      "name": "Tactical Carry Bag",
+      "category": "organization",
+      "categoryLabel": "Bags & Organization",
+      "price": 29,
+      "priceDisplay": "$29–$99",
+      "url": "https://www.hidow.com/shop/tactical-carry-bag/",
+      "description": "Everyday carry with purpose. Compact, structured, and built to keep your recovery setup organized, clean, and ready for whatever the day brings.",
+      "image": "https://www.hidow.com/wp-content/uploads/2024/11/new-carry-bags-hidow-03.jpg",
+      "badge": null,
+      "pain_areas": [
+        "general"
+      ]
+    },
+    {
+      "id": "tactical-backpack",
+      "name": "Tactical Backpack",
+      "category": "organization",
+      "categoryLabel": "Bags & Organization",
+      "price": 35,
+      "priceDisplay": "$35",
+      "url": "https://www.hidow.com/shop/tactical-backpack/",
+      "description": "Built like a field pack. Sized for everyday use. This 25L tactical backpack delivers structured storage, modular functionality, and zero-nonsense durability.",
+      "image": "https://www.hidow.com/wp-content/uploads/2023/08/25L-tactical-backpack-main.jpg",
+      "badge": null,
+      "pain_areas": [
+        "general"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,180 @@
+{
+  "faqs": [
+    {
+      "id": "faq-1",
+      "question_en": "So, what makes HiDow different from other devices on the market?",
+      "answer_en": "HiDow’s pre-programmed therapeutic TENS and EMS modes have been carefully designed by physical therapists and healthcare professionals to give the best stim experience on the market. No bite. No sting. Only smooth, soothing, pulsations that will provide fast-acting pain relief so you can get back in the game. Our devices offer three therapies in one machine, whereas most stim machines only use either TENS or EMS programs, not both. HiDow’s unique line of electro-therapy equipment uses both with an additional Microcurrent setting.",
+      "tags": [
+        "general"
+      ]
+    },
+    {
+      "id": "faq-2",
+      "question_en": "What is TENS?",
+      "answer_en": "Transcutaneous Electrical Nerve Stimulation (TENS) is a pain relief therapy that uses a low-voltage electrical current to stimulate sensory nerves and suppress pain signals that are being sent to the brain. By applying the TENS stimulus to a pain area, the brain will sense short-term relief instead of the pain.",
+      "tags": [
+        "general"
+      ]
+    },
+    {
+      "id": "faq-3",
+      "question_en": "What kind of pain conditions does TENS target?",
+      "answer_en": "TENS provides pain relief for many different types of pain issues, such as lower back pain, stiff neck, minor aches and pains, and so much more. In addition, TENS is often used by athletes to provide relief for post-workout pain or soreness and to help muscles relax and recover.",
+      "tags": [
+        "general"
+      ]
+    },
+    {
+      "id": "faq-4",
+      "question_en": "How strong is TENS?",
+      "answer_en": "TENS frequencies range from 2-10 Hz.",
+      "tags": [
+        "general"
+      ]
+    },
+    {
+      "id": "faq-5",
+      "question_en": "What is EMS?",
+      "answer_en": "Electric Muscle Stimulation (EMS) is also known as “NEMS” or Neuromuscular Electrical Stimulation. EMS uses a slightly stronger current than TENS to get muscles to contract. These impulses mimic the same action potential coming from the central nervous system during physical activity. This can improve muscle strength and function.",
+      "tags": [
+        "general"
+      ]
+    },
+    {
+      "id": "faq-6",
+      "question_en": "How is EMS used?",
+      "answer_en": "In a medical setting, EMS can be used as part of a rehabilitation program for patients with musculoskeletal injuries.\nAthletes can use EMS to enhance workouts and improve muscle performance. They can also use EMS to help sore muscles recover faster.",
+      "tags": [
+        "general"
+      ]
+    },
+    {
+      "id": "faq-7",
+      "question_en": "How strong is EMS?",
+      "answer_en": "EMS devices use electrical pulses just like the ones our bodies produce, which vary from 20-50Hz.",
+      "tags": [
+        "general"
+      ]
+    },
+    {
+      "id": "faq-8",
+      "question_en": "What is the difference between TENS and EMS?",
+      "answer_en": "TENS and EMS target different nerve groups in the body. Therefore, TENS and EMS have different indications for use. TENS targets sensory nerves and will temporarily relieve pain. EMS targets the muscle itself through the motor nerves and will improve and facilitate muscle performance. Sensory and motor nerves fire at different frequencies, which is why EMS and TENS devices affect the body differently.",
+      "tags": [
+        "general"
+      ]
+    },
+    {
+      "id": "faq-9",
+      "question_en": "Is TENS and EMS safe?",
+      "answer_en": "It is safe for most people to use TENS/EMS. However, the electrical impulses that a TENS/EMS unit produces may cause a buzzing, tingling, or prickling sensation, which some people may find uncomfortable. On very rare occasions, an electrical current will be too intense for a patient, causing burning or irritation on the skin.",
+      "tags": [
+        "general"
+      ]
+    },
+    {
+      "id": "faq-10",
+      "question_en": "What is Microcurrent therapy?",
+      "answer_en": "Microcurrent is the use of very low-frequency impulses that bypass many of the sensory nerves EMS and TENS often hit. The current is designed to match a similar amount of electrical activity already present during natural cell activity.",
+      "tags": [
+        "general"
+      ]
+    },
+    {
+      "id": "faq-11",
+      "question_en": "What are the uses of Microcurrent?",
+      "answer_en": "Microcurrent stimulates the production of ATP (Adenosine Triphosphate) in our body to clean and fuel tissues that promote recovery.\nMicrocurrent delivers a sub-sensory current with almost no sensation, which can be used in auricular therapy to relieve pain from conditions such as migraines, headaches, TMJ, and more.\nOne of the latest innovations in the anti-aging industry is Microcurrent. It is used in spas and medical offices for facial toning and firming of aging skin.",
+      "tags": [
+        "general"
+      ]
+    },
+    {
+      "id": "faq-12",
+      "question_en": "How strong is Microcurrent?",
+      "answer_en": "Microcurrent impulses can be as low as 1/1000th of a TENS device!\nIt often uses 100-500 Ua.\nNOTE: 1 Hz = 1000 Ua’s or 1000 microamps!",
+      "tags": [
+        "general"
+      ]
+    },
+    {
+      "id": "faq-13",
+      "question_en": "Where can I apply the adhesive electrode pads?",
+      "answer_en": "You can apply the adhesive electrode pads to anywhere on your body, except the heart and brain area, the front of the neck, or directly on an open or bleeding wound.",
+      "tags": [
+        "general"
+      ]
+    },
+    {
+      "id": "faq-14",
+      "question_en": "The electrode pads are not sticking well. What can I do?",
+      "answer_en": "Ensure that the protective plastic film covering the electrode pad adhesive surface has been removed. Your pads may have dried out. The adhesive gel on the electrode pads should be moist. The pads will eventually dry out from use and will need to be replaced. To extend the life of your pads, place a few drops of water on each pad after use, and immediately apply the protective film to prevent them from drying out or picking up dirt. For best results, replace your electrode pads often.",
+      "tags": [
+        "general"
+      ]
+    },
+    {
+      "id": "faq-15",
+      "question_en": "Why do I, on occasion, feel stinging sensations from the pads?",
+      "answer_en": "Worn-out electrode pads are the most common cause.  Try replacing your worn pads with a new set. The sensation should be mild and soothing, not stinging. The electrode pad must be moist and sticky to work. Pads that have dried out may produce a weak and stinging sensation. Try placing a few drops of water onto the pads. Wipe the surface with your finger, allow any excess water to dry, and then apply immediately to your skin. Make sure that the electrode pads are making firm and full contact with your skin.   For best results, replace your pads often.",
+      "tags": [
+        "general"
+      ]
+    },
+    {
+      "id": "faq-16",
+      "question_en": "I can hardly feel anything from the electrode pads, what am I doing wrong?",
+      "answer_en": "Check for a firm wire connection on the pads and make sure the plug is securely plugged into the post of the unit.\n2. Turn the unit off before adjusting or plugging in the lead wires to prevent sudden, intense stimulation.\n3. Make sure that the battery has been charged.\n4. Check to ensure the electrode pads are moist and not worn out.\n5. Turn the unit off, then turn it back on again.\n6.  Please make sure both electrode pads are attached to the same person’s body, in order to feel the sensation.",
+      "tags": [
+        "general"
+      ]
+    },
+    {
+      "id": "faq-17",
+      "question_en": "I have a pacemaker or defibrillator, is this product safe for me to use?",
+      "answer_en": "No, unfortunately, muscle stimulators should not be used by those with a pacemaker or defibrillator.",
+      "tags": [
+        "general"
+      ]
+    },
+    {
+      "id": "faq-18",
+      "question_en": "How long can I use this?",
+      "answer_en": "You can use it as often as you like. An average alleviation session should last between 10-40 minutes. We recommend you use your muscle stimulator for at least 20 minutes to achieve results but not more than 60 minutes in the same area to prevent muscle fatigue. We recommend using your device 1 to 3 times daily for the best results.",
+      "tags": [
+        "general"
+      ]
+    },
+    {
+      "id": "faq-19",
+      "question_en": "Do I need to ask my doctor first before using the device?",
+      "answer_en": "Our devices are cleared for OTC use and are not intended to replace any professional health care.   When in doubt, we recommend that you consult with your health practitioner first.",
+      "tags": [
+        "general"
+      ]
+    },
+    {
+      "id": "faq-20",
+      "question_en": "What are the benefits of TENS?",
+      "answer_en": "• Short-term pain relief\n• Promotes blood circulation\n• Promotes natural healing in the body\n• Stimulates the production of endorphins, our bodies’ natural painkillers",
+      "tags": [
+        "general"
+      ]
+    },
+    {
+      "id": "faq-21",
+      "question_en": "What are the benefits of EMS?",
+      "answer_en": "• Increase in muscular performance\n• Promotes muscle recovery\n• Reduces pain\n• Promotes blood flow",
+      "tags": [
+        "general"
+      ]
+    },
+    {
+      "id": "faq-22",
+      "question_en": "What are the benefits of Microcurrent?",
+      "answer_en": "• Increase in promotion of ATP to promote recovery\n• Bypasses the majority of the sensory nerves\n• Promotes relief from migraines and headaches\n• Passes easily through all the layers of tissue",
+      "tags": [
+        "general"
+      ]
+    }
+  ]
+}

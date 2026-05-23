@@ -1,0 +1,23 @@
+{
+  "upsells": {
+    "pro-touch-6-12":    ["perfect-conductor", "cervical-pads", "tactical-carry-bag"],
+    "wireless-4-9":      ["perfect-conductor", "dualpoint-pads", "tactical-carry-bag"],
+    "hidow-spot":        ["perfect-conductor", "dualpoint-pads"],
+    "wireless-receiver": ["perfect-conductor", "dualpoint-pads"],
+    "xp-micro":          ["perfect-conductor", "cervical-pads", "dualpoint-pads"],
+    "xpd-12":            ["perfect-conductor", "cervical-pads", "magnapads"],
+    "xpds-18":           ["perfect-conductor", "magnapads", "tactical-carry-bag"],
+    "xpds-4-24":         ["perfect-conductor", "magnapads", "tactical-backpack"],
+    "acugloves":         ["perfect-conductor", "magnesium-spray"],
+    "acuwrist-wrap":     ["perfect-conductor", "magnesium-spray"],
+    "acuelbow-wrap":     ["perfect-conductor", "magnesium-spray"],
+    "acuslippers":       ["perfect-conductor", "magnesium-spray"],
+    "hd-mini2":          ["magnesium-spray", "tactical-carry-bag"],
+    "m3-mini3":          ["magnesium-spray"],
+    "thermoair-wave":    ["magnesium-spray"],
+    "ocuwave":           ["revive-head-wrap"],
+    "hd-glo":            ["magnesium-spray"],
+    "revive-head-wrap":  ["magnesium-spray"]
+  },
+  "note": "Keys are product IDs. Values are IDs of complementary products to suggest."
+}

@@ -1,0 +1,8 @@
+node_modules
+.env
+logs
+data/sessions
+data/user_memory
+widget/node_modules
+*.log
+.git

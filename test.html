@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>HiDow Agent — Test UI</title>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#f0f2f5;display:flex;flex-direction:column;align-items:center;min-height:100vh;padding:24px 16px}
+    h1{font-size:20px;color:#1a1a2e;margin-bottom:4px}
+    .subtitle{font-size:13px;color:#888;margin-bottom:20px}
+    .links{font-size:12px;color:#888;margin-bottom:16px}
+    .links a{color:#2563eb;text-decoration:none}
+    #chat-container{background:white;border-radius:12px;box-shadow:0 2px 16px rgba(0,0,0,.12);width:100%;max-width:700px;display:flex;flex-direction:column;height:620px;overflow:hidden}
+    #chat-header{background:#1a1a2e;color:white;padding:16px 20px;font-weight:600;font-size:15px;display:flex;align-items:center;gap:10px}
+    #messages{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:12px}
+    .msg{padding:10px 14px;border-radius:12px;font-size:14px;line-height:1.5;word-break:break-word}
+    .msg.user{align-self:flex-end;background:#2563eb;color:white;border-bottom-right-radius:4px;max-width:78%;white-space:pre-wrap}
+    .msg.assistant{align-self:flex-start;background:#f0f2f5;color:#1a1a2e;border-bottom-left-radius:4px;max-width:78%}
+    .msg.system-note{align-self:center;background:#dcfce7;color:#166534;font-size:12px;padding:5px 12px;border-radius:20px}
+    .cursor{display:inline-block;animation:blink 1s step-end infinite;color:#2563eb}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+    .product-cards{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;align-self:flex-start}
+    .product-card{width:130px;border:1px solid #e5e7eb;border-radius:8px;overflow:hidden;text-decoration:none;color:inherit;background:white;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+    .product-card img{width:100%;height:80px;object-fit:cover;background:#f0f2f5}
+    .product-card-body{padding:6px 8px 8px}
+    .product-card-name{font-size:11px;font-weight:600;color:#1a1a2e;margin-bottom:2px;line-height:1.3}
+    .product-card-price{font-size:12px;color:#2563eb;font-weight:700}
+    .typing{align-self:flex-start;background:#f0f2f5;border-radius:12px;border-bottom-left-radius:4px;padding:12px 16px;display:flex;gap:4px}
+    .dot{width:8px;height:8px;background:#888;border-radius:50%;animation:bounce 1.2s infinite}
+    .dot:nth-child(2){animation-delay:.2s}.dot:nth-child(3){animation-delay:.4s}
+    @keyframes bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-6px)}}
+    #input-area{border-top:1px solid #eee;padding:12px 16px;display:flex;gap:8px}
+    #user-input{flex:1;border:1px solid #ddd;border-radius:8px;padding:10px 14px;font-size:14px;outline:none;resize:none;font-family:inherit}
+    #user-input:focus{border-color:#2563eb}
+    #send-btn{background:#2563eb;color:white;border:none;border-radius:8px;padding:10px 18px;font-size:14px;font-weight:600;cursor:pointer}
+    #send-btn:disabled{background:#93c5fd;cursor:not-allowed}
+    .quick-replies{display:flex;flex-wrap:wrap;gap:8px;padding:0 20px 12px}
+    .qr-btn{background:white;border:1px solid #2563eb;color:#2563eb;border-radius:20px;padding:5px 14px;font-size:13px;cursor:pointer}
+    .qr-btn:hover{background:#2563eb;color:white}
+  </style>
+</head>
+<body>
+  <h1>🩺 HiDow Agent</h1>
+  <p class="subtitle">Test UI — streaming enabled</p>
+  <p class="links"><a href="/analytics.html">📊 Analytics Dashboard</a></p>
+
+  <div id="chat-container">
+    <div id="chat-header"><span>🤖</span> HiDow International Assistant</div>
+    <div id="messages">
+      <div class="msg assistant">
+        👋 Hi! I'm the HiDow assistant. Ask me anything about our TENS/EMS devices, or I can help you place an order.<br/><br/>
+        🇪🇸 También hablo español. ¡Escríbeme en tu idioma!
+      </div>
+    </div>
+    <div class="quick-replies" id="quick-replies">
+      <button class="qr-btn" onclick="sendQuick(this)">What is TENS/EMS?</button>
+      <button class="qr-btn" onclick="sendQuick(this)">Show wireless devices</button>
+      <button class="qr-btn" onclick="sendQuick(this)">I have back pain</button>
+      <button class="qr-btn" onclick="sendQuick(this)">¿Cuánto cuesta el Pro Touch?</button>
+    </div>
+    <div id="input-area">
+      <textarea id="user-input" rows="1" placeholder="Type a message..."></textarea>
+      <button id="send-btn" onclick="sendMessage()">Send</button>
+    </div>
+  </div>
+
+  <script>
+    const STREAM_URL = "http://localhost:3001/api/chat/stream";
+    let sessionId = crypto.randomUUID();
+    let messages = [];
+    let isLoading = false;
+
+    const messagesEl = document.getElementById("messages");
+    const inputEl    = document.getElementById("user-input");
+    const sendBtn    = document.getElementById("send-btn");
+
+    inputEl.addEventListener("keydown", e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(); } });
+
+    function addMessage(role, content) {
+      const div = document.createElement("div");
+      div.className = `msg ${role}`;
+      div.textContent = content;
+      messagesEl.appendChild(div);
+      scroll();
+      return div;
+    }
+
+    function addNote(text) {
+      const div = document.createElement("div");
+      div.className = "msg system-note";
+      div.textContent = text;
+      messagesEl.appendChild(div);
+      scroll();
+    }
+
+    function addProductCards(products) {
+      if (!products?.length) return;
+      const row = document.createElement("div");
+      row.className = "product-cards";
+      for (const p of products) {
+        const a = document.createElement("a");
+        a.className = "product-card";
+        a.href = p.url;
+        a.target = "_blank";
+        a.rel = "noreferrer";
+        a.innerHTML = p.image
+          ? `<img src="${p.image}" alt="${p.name}" loading="lazy"/>`
+          : `<div style="height:80px;background:#e5e7eb"></div>`;
+        a.innerHTML += `<div class="product-card-body">
+          <div class="product-card-name">${p.name}</div>
+          <div class="product-card-price">${p.price}</div>
+        </div>`;
+        row.appendChild(a);
+      }
+      messagesEl.appendChild(row);
+      scroll();
+    }
+
+    function scroll() { messagesEl.scrollTop = messagesEl.scrollHeight; }
+
+    async function sendMessage(text) {
+      const userText = text || inputEl.value.trim();
+      if (!userText || isLoading) return;
+      inputEl.value = "";
+      isLoading = true;
+      sendBtn.disabled = true;
+      document.getElementById("quick-replies").style.display = "none";
+
+      addMessage("user", userText);
+      messages.push({ role: "user", content: userText });
+
+      // Streaming assistant bubble
+      const bubble = document.createElement("div");
+      bubble.className = "msg assistant";
+      const cursor = document.createElement("span");
+      cursor.className = "cursor";
+      cursor.textContent = "▌";
+      bubble.appendChild(cursor);
+      messagesEl.appendChild(bubble);
+      scroll();
+
+      let fullText = "";
+
+      try {
+        const res = await fetch(STREAM_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ messages, sessionId }),
+        });
+
+        const reader = res.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = "";
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          buffer += decoder.decode(value, { stream: true });
+          const lines = buffer.split("\n");
+          buffer = lines.pop();
+
+          for (const line of lines) {
+            if (!line.startsWith("data: ")) continue;
+            const raw = line.slice(6).trim();
+            if (raw === "[CLOSE]") break;
+            try {
+              const chunk = JSON.parse(raw);
+              if (chunk.type === "text") {
+                fullText += chunk.content;
+                bubble.textContent = fullText;
+                bubble.appendChild(cursor);
+                scroll();
+              }
+              if (chunk.type === "done") {
+                bubble.textContent = fullText;
+                if (chunk.emailSent) addNote("✅ Order confirmation email sent!");
+                if (chunk.products?.length) addProductCards(chunk.products);
+                messages.push({ role: "assistant", content: fullText });
+              }
+              if (chunk.type === "error") {
+                bubble.textContent = chunk.content;
+              }
+            } catch { /* skip malformed */ }
+          }
+        }
+      } catch {
+        bubble.textContent = "⚠️ Cannot reach the server. Make sure it's running on localhost:3001.";
+      } finally {
+        cursor.remove();
+        isLoading = false;
+        sendBtn.disabled = false;
+        inputEl.focus();
+      }
+    }
+
+    function sendQuick(btn) { sendMessage(btn.textContent); }
+  </script>
+</body>
+</html>
